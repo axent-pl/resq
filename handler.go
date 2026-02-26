@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/axent-pl/resq/utils"
@@ -64,9 +65,10 @@ func listReportsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func detailReportHandler(w http.ResponseWriter, r *http.Request) {
+func readReportHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	report, err := reportService.Read(id)
+	version := r.URL.Query().Get("v")
+	report, err := readReportWithOptionalVersion(id, version)
 	if err != nil {
 		slog.Error(fmt.Sprintf("could not find report: %v", err))
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -107,13 +109,18 @@ func newReportHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad request", 400)
 		return
 	}
-	reportService.Create(*report)
+	if _, err := reportService.Create(*report); err != nil {
+		slog.Error(fmt.Sprintf("could not create report: %v", err))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	http.Redirect(w, r, "/reports", http.StatusSeeOther)
 }
 
 func editReportHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	report, err := reportService.Read(id)
+	version := r.URL.Query().Get("v")
+	report, err := readReportWithOptionalVersion(id, version)
 	if err != nil {
 		slog.Error(fmt.Sprintf("could not find report: %v", err))
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -142,7 +149,13 @@ func editReportHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
-		reportService.Create(*updatedReport)
+		updatedReport.Id = id
+		updatedReport.Version = report.Version
+		if _, err := reportService.Update(*updatedReport, UpdateModeOverwriteVersion); err != nil {
+			slog.Error(fmt.Sprintf("could not update report: %v", err))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		http.Redirect(w, r, "/reports", http.StatusSeeOther)
 		return
 	}
@@ -151,14 +164,23 @@ func editReportHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func newVersionHandler(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+	id := r.PathValue("id")
+	baseVersion := r.URL.Query().Get("v")
+	baseReport, err := readReportWithOptionalVersion(id, baseVersion)
+	if err != nil {
+		slog.Error(fmt.Sprintf("could not find base report: %v", err))
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
 	if r.Method == http.MethodGet {
+		baseReport.Version++
 		data := FormPageData{
 			CSRFToken:   "dummy_csrf",
 			CurrentUser: "demo.user",
 			Action:      r.URL.Path,
 			Mode:        "new-version",
-			Report:      Report{Id: id, Version: 2, IncidentTime: time.Now()},
+			Report:      baseReport,
 		}
 		if err := ExecuteTemplate(w, "form", data); err != nil {
 			slog.Error(fmt.Sprintf("could not execute 'form' template: %v", err))
@@ -172,6 +194,22 @@ func newVersionHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad request", 400)
 		return
 	}
-	reportService.Create(*report)
+	report.Id = id
+	if _, err := reportService.Update(*report, ""); err != nil {
+		slog.Error(fmt.Sprintf("could not create new report version: %v", err))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	http.Redirect(w, r, "/reports", http.StatusSeeOther)
+}
+
+func readReportWithOptionalVersion(id string, version string) (Report, error) {
+	if version == "" {
+		return reportService.Read(id)
+	}
+	v, err := strconv.Atoi(version)
+	if err != nil {
+		return Report{}, fmt.Errorf("invalid version %q", version)
+	}
+	return reportService.ReadVersion(id, v)
 }
