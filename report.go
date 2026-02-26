@@ -125,6 +125,37 @@ func (s *ReportService) FindBy(filter func(Report) bool) ([]Report, error) {
 	return s.store.FindBy(filter)
 }
 
+func (s *ReportService) FindLatestBy(filter func(Report) bool) ([]Report, error) {
+	allReports, err := s.store.List()
+	if err != nil {
+		return nil, err
+	}
+
+	latestByID := make(map[string]Report)
+	for _, report := range allReports {
+		current, exists := latestByID[report.Id]
+		if !exists || report.Version > current.Version {
+			latestByID[report.Id] = report
+		}
+	}
+
+	result := make([]Report, 0, len(latestByID))
+	for _, report := range latestByID {
+		if filter(report) {
+			result = append(result, report)
+		}
+	}
+
+	sort.Slice(result, func(i, j int) bool {
+		if result[i].IncidentTime.Equal(result[j].IncidentTime) {
+			return result[i].Id < result[j].Id
+		}
+		return result[i].IncidentTime.After(result[j].IncidentTime)
+	})
+
+	return result, nil
+}
+
 func (s *ReportService) Create(report Report) (Report, error) {
 	if report.Id == "" {
 		report.Id = uuid.NewString()

@@ -48,7 +48,7 @@ func listReportsHandler(w http.ResponseWriter, r *http.Request) {
 	data.Filters.Author = r.URL.Query().Get("author")
 	data.Filters.Day = r.URL.Query().Get("day")
 
-	reports, err := reportService.FindBy(getFilter(r))
+	reports, err := reportService.FindLatestBy(getFilter(r))
 	if err != nil {
 		slog.Error("could not fetch reports list", "error", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
