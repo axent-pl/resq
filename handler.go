@@ -85,6 +85,31 @@ func readReportHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func historyHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	versions, err := reportService.ListVersions(id)
+	if err != nil {
+		slog.Error(fmt.Sprintf("could not fetch report versions: %v", err))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if len(versions) == 0 {
+		http.Error(w, "not found", http.StatusNotFound)
+		return
+	}
+
+	data := HistoryPageData{
+		CSRFToken:   "dummy_csrf",
+		CurrentUser: "demo.user",
+		ReportID:    id,
+		Reports:     versions,
+	}
+	if err := ExecuteTemplate(w, "history", data); err != nil {
+		slog.Error(fmt.Sprintf("could not execute 'history' template: %v", err))
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
 func newReportHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		data := FormPageData{

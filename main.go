@@ -12,6 +12,7 @@ func main() {
 	mux.HandleFunc("/reports", listReportsHandler)
 	mux.HandleFunc("/reports/new", newReportHandler)
 	mux.HandleFunc("/reports/view/{id}", readReportHandler)
+	mux.HandleFunc("/reports/history/{id}", historyHandler)
 	mux.HandleFunc("/reports/edit/{id}", editReportHandler)
 	mux.HandleFunc("/reports/version/{id}", newVersionHandler)
 	log.Fatal(http.ListenAndServe(":1234", mux))

@@ -184,6 +184,10 @@ func (s *ReportService) ReadVersion(id string, version int) (Report, error) {
 	return s.store.Read(s.reportKey(id, version))
 }
 
+func (s *ReportService) ListVersions(id string) ([]Report, error) {
+	return s.listVersions(id)
+}
+
 func (s *ReportService) Update(report Report, mode UpdateMode) (Report, error) {
 	if report.Id == "" {
 		return Report{}, errors.New("report id is required")

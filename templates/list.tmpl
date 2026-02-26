@@ -51,6 +51,7 @@
         <div class="d-flex gap-2">
             <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#m-{{.Id}}-{{.Version}}">Podgląd</button>
             <a class="btn btn-outline-primary btn-sm" href="/reports/view/{{.Id}}?v={{.Version}}">Szczegóły</a>
+            <a class="btn btn-outline-dark btn-sm" href="/reports/history/{{.Id}}">Historia</a>
             <a class="btn btn-primary btn-sm" href="/reports/edit/{{.Id}}?v={{.Version}}">Edytuj</a>
             <a class="btn btn-success btn-sm" href="/reports/version/{{.Id}}?v={{.Version}}">Nowa wersja</a>
         </div>

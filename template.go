@@ -28,6 +28,13 @@ type DetailPageData struct {
 	Report      Report
 }
 
+type HistoryPageData struct {
+	CSRFToken   string
+	CurrentUser string
+	ReportID    string
+	Reports     []Report
+}
+
 type FormPageData struct {
 	CSRFToken   string
 	CurrentUser string

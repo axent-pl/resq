@@ -54,5 +54,33 @@
     "Notes": "",
     "Interventions": "antyseptyk, opatrunek osłonowy",
     "Handoff": ""
+  },
+  "5b4561b7-ee3c-4660-a789-afb8ba7309e8:3": {
+    "Id": "5b4561b7-ee3c-4660-a789-afb8ba7309e8",
+    "Version": 3,
+    "Author": "",
+    "TeamId": "A1",
+    "DeviceLat": "",
+    "DeviceLng": "",
+    "IncidentTime": "2026-02-26T08:23:00Z",
+    "Location": "Szczecin",
+    "PatientName": "Jan Kowalski",
+    "PatientAge": 45,
+    "PatientPESEL": "",
+    "PatientSex": "M",
+    "Symptoms": "Stłuczone kolano",
+    "Allergies": "brak",
+    "Medications": "brak",
+    "Past": "brak",
+    "LastIntake": "woda",
+    "Events": "upadek na rowerze",
+    "HR": 70,
+    "SpO2": 98,
+    "BPSys": 0,
+    "BPDia": 0,
+    "Glucose": 0,
+    "Notes": "",
+    "Interventions": "antyseptyk, opatrunek osłonowy",
+    "Handoff": ""
   }
 }
