@@ -1,0 +1,150 @@
+{{define "title"}}{{if eq .Mode "create"}}Nowy raport{{else if eq .Mode "new-version"}}Nowa wersja raportu #{{.Report.Id}}{{else}}Edycja raportu #{{.Report.Id}} (v{{.Report.Version}}){{end}}{{end}}
+{{define "content"}}
+<form class="needs-validation" novalidate method="POST" action="{{ .Action }}">
+<input type="hidden" name="csrf" value="{{.CSRFToken}}">
+
+<div class="form-section">
+    <h2 class="h6">Zdarzenie</h2>
+    <div class="row g-2">
+        <div class="col-12 col-md-6">
+            <label for="incident_time" class="form-label">Czas zdarzenia</label>
+            <input id="incident_time" type="datetime-local" class="form-control" name="incident_time" value="{{.Report.IncidentTime.Format "2006-01-02T15:04"}}" required>
+        </div>
+        <div class="col-12 col-md-6">
+            <label for="incident_location" class="form-label">Miejsce</label>
+            <input id="incident_location" type="text" class="form-control" name="incident_location" value="{{.Report.IncidentLocation}}" required>
+        </div>
+        <div class="col-12 col-md-6">
+            <label for="team_id" class="form-label">Zespół</label>
+            <input id="team_id" type="text" class="form-control" name="team_id" value="{{.Report.TeamID}}">
+        </div>
+        <div class="col-6 col-md-6">
+            <input id="device_lat" type="hidden" class="form-control" name="device_lat" value="{{.Report.DeviceLat}}">
+            <input id="device_lng" type="hidden" class="form-control" name="device_lng" value="{{.Report.DeviceLng}}">
+        </div>
+    </div>
+</div>
+
+<div class="form-section">
+    <h2 class="h6">Pacjent</h2>
+    <div class="row g-2">
+    <div class="col-12 col-md-6">
+        <label for="patient_name" class="form-label">Imię i nazwisko</label>
+        <input id="patient_name" type="text" class="form-control" name="patient_name" value="{{.Report.PatientName}}">
+    </div>
+    <div class="col-6 col-md-3">
+        <label for="patient_age" class="form-label">Wiek</label>
+        <input id="patient_age" type="number" class="form-control" name="patient_age" value="{{.Report.PatientAge}}" min="0" step="1">
+    </div>
+    <div class="col-6 col-md-3">
+        <label for="patient_sex" class="form-label">Płeć</label>
+        <select id="patient_sex" class="form-select" name="patient_sex">
+        <option value="">—</option>
+        <option value="K" {{if eq .Report.PatientSex "K"}}selected{{end}}>K</option>
+        <option value="M" {{if eq .Report.PatientSex "M"}}selected{{end}}>M</option>
+        <option value="inna" {{if eq .Report.PatientSex "inna"}}selected{{end}}>inna</option>
+        </select>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="patient_pesel" class="form-label">PESEL</label>
+        <input id="patient_pesel" type="text" class="form-control" name="patient_pesel" value="{{.Report.PatientPESEL}}" inputmode="numeric" maxlength="11">
+    </div>
+    </div>
+</div>
+
+<div class="form-section">
+    <h2 class="h6">SAMPLE</h2>
+    <div class="row g-2">
+    <div class="col-12">
+        <label for="symptoms" class="form-label">Objawy</label>
+        <textarea id="symptoms" class="form-control" name="symptoms" rows="4">{{.Report.Symptoms}}</textarea>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="allergies" class="form-label">Alergie</label>
+        <textarea id="allergies" class="form-control" name="allergies" rows="4">{{.Report.Allergies}}</textarea>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="medications" class="form-label">Leki</label>
+        <textarea id="medications" class="form-control" name="medications" rows="4">{{.Report.Medications}}</textarea>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="past" class="form-label">Przebyte choroby</label>
+        <textarea id="past" class="form-control" name="past" rows="4">{{.Report.Past}}</textarea>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="last" class="form-label">Ostatni posiłek/płyny</label>
+        <textarea id="last" class="form-control" name="last" rows="4">{{.Report.LastIntake}}</textarea>
+    </div>
+    <div class="col-12">
+        <label for="events" class="form-label">Zdarzenia</label>
+        <textarea id="events" class="form-control" name="events" rows="4">{{.Report.Events}}</textarea>
+    </div>
+    </div>
+</div>
+
+<div class="form-section">
+    <h2 class="h6">Parametry życiowe</h2>
+    {{/* HR */}}
+    {{template "measurement" dict "Name" "vitals_hr" "Label" "Tętno (HR) [1/min]" "Value" .Report.HR "Min" 0 "Max" 220 "Step" 1 "Checked" .Report.HR "Help" "Typowo 60–100 w spoczynku."}}
+    {{/* SpO2 */}}
+    {{template "measurement" dict "Name" "vitals_spo2" "Label" "Saturacja (SpO₂) [%]" "Value" .Report.SpO2 "Min" 0 "Max" 100 "Step" 1 "Checked" .Report.SpO2 "Help" "Typowo 95-100."}}
+    {{/* BP SYS/DIA -> two rows */}}
+    <div class="row g-2 align-items-start">
+        <div class="col-12 col-md-6">
+            {{template "measurement" dict "Name" "vitals_bp_sys" "Label" "Ciśnienie skurczowe (SBP) [mmHg]" "Value" .Report.BPSys "Min" 0 "Max" 260 "Step" 1 "Checked" .Report.BPSys }}
+        </div>
+        <div class="col-12 col-md-6">
+            {{template "measurement" dict "Name" "vitals_bp_dia" "Label" "Ciśnienie rozkurczowe (DBP) [mmHg]" "Value" .Report.BPDia "Min" 0 "Max" 200 "Step" 1 "Checked" .Report.BPDia }}
+        </div>
+    </div>
+    {{/* Glucose */}}
+    {{template "measurement" dict "Name" "vitals_glucose" "Label" "Glikemia [mg/dL]" "Value" .Report.Glucose "Min" 0 "Max" 600 "Step" 1 "Checked" .Report.Glucose }}
+</div>
+
+<div class="form-section">
+    <h2 class="h6">Dodatkowe</h2>
+    <div class="row g-2">
+    <div class="col-12">
+        <label for="interventions" class="form-label">Interwencje</label>
+        <textarea id="interventions" class="form-control" name="interventions" rows="2">{{.Report.Interventions}}</textarea>
+    </div>
+    <div class="col-12">
+        <label for="handoff" class="form-label">Przekazanie</label>
+        <textarea id="handoff" class="form-control" name="handoff" rows="2">{{.Report.Handoff}}</textarea>
+    </div>
+    <div class="col-12">
+        <label for="notes" class="form-label">Notatki</label>
+        <textarea id="notes" class="form-control" name="notes" rows="3">{{.Report.Notes}}</textarea>
+    </div>
+    </div>
+</div>
+
+<div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
+    <a href="/reports" class="btn btn-outline-secondary">Anuluj</a>
+    <button type="submit" class="btn btn-primary">Zapisz</button>
+</div>
+</form>
+{{end}}
+
+{{define "measurement"}}
+  {{/* . expects: Name, Label, Value (int), Min, Max, Step, Checked, Help (string, optional) */}}
+  {{ $id := printf "%s" .Name }}
+  <div class="measure-widget mb-3">
+    <div class="d-flex align-items-center justify-content-between mb-1">
+      <label class="form-label mb-0" for="{{$id}}-num">{{.Label}}</label>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="{{$id}}-cb" name="measured_{{.Name}}" {{if .Checked}}checked{{end}}>
+        <label class="form-check-label small" for="{{$id}}-cb">Zmierzone</label>
+      </div>
+    </div>
+    {{if .Help}}<div class="form-text">{{.Help}}</div>{{end}}
+    <div class="input-group">
+      <input id="{{$id}}-num" inputmode="numeric" type="number" class="form-control" name="{{.Name}}" value="{{.Value}}" min="{{.Min}}" max="{{.Max}}" step="{{.Step}}" placeholder="—">
+      <input id="{{$id}}-rng" type="range" class="form-range flex-grow-1" min="{{.Min}}" max="{{.Max}}" step="{{.Step}}" value="{{.Value}}" aria-label="{{.Label}} slider">
+    </div>
+  </div>
+{{end}}
+
+{{define "form"}}
+{{template "layout" dict "Mode" .Mode "Report" .Report "CSRFToken" .CSRFToken}}
+{{end}}

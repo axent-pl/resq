@@ -2,6 +2,7 @@ package storage
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"maps"
@@ -94,11 +95,33 @@ func (s *Storage[IT, DT]) List() ([]DT, error) {
 	return slices.Collect(maps.Values(s.data)), nil
 }
 
+func (s *Storage[IT, DT]) FindBy(filter func(DT) bool) ([]DT, error) {
+	s.dataMU.RLock()
+	defer s.dataMU.RUnlock()
+	var results []DT
+	for _, d := range s.data {
+		if filter(d) {
+			results = append(results, d)
+		}
+	}
+	return results, nil
+}
+
 func (s *Storage[IT, DT]) Create(idx IT, d DT) error {
 	s.dataMU.Lock()
 	defer s.dataMU.Unlock()
 	s.data[idx] = d
 	return s.persist()
+}
+
+func (s *Storage[IT, DT]) Read(idx IT) (DT, error) {
+	s.dataMU.RLock()
+	defer s.dataMU.RUnlock()
+	if d, ok := s.data[idx]; ok {
+		return d, nil
+	}
+	var d DT
+	return d, errors.New("not found")
 }
 
 func (s *Storage[IT, DT]) Update(idx IT, d DT) error {

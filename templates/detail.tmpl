@@ -1,0 +1,89 @@
+{{define "title"}}Raport #{{.Report.Id}} (v{{.Report.Version}}){{end}}
+{{define "content"}}
+{{with .Report}}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Raport #{{.Id}} <span class="badge text-bg-secondary">v{{.Version}}</span></h1>
+    <div class="d-flex gap-2">
+    <a class="btn btn-outline-primary btn-sm" href="/reports/{{.Id}}/edit?v={{.Version}}">Edytuj</a>
+    <a class="btn btn-success btn-sm" href="/reports/{{.Id}}/versions/new?v={{.Version}}">Nowa wersja</a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-12 col-lg-6">
+    <div class="card shadow-sm">
+        <div class="card-body">
+        <h2 class="h6">Zdarzenie</h2>
+        <dl class="kv">
+            <dt>Data</dt><dd>{{.IncidentTime.Format "2006-01-02 15:04"}}</dd>
+            <dt>Miejsce</dt><dd>{{.IncidentLocation}}</dd>
+            <dt>Zespół</dt><dd>{{.TeamID}}</dd>
+            <dt>Autor</dt><dd>{{.Author}}</dd>
+            <dt>Urządzenie</dt><dd>{{.DeviceLat}}, {{.DeviceLng}}</dd>
+        </dl>
+        </div>
+    </div>
+    </div>
+    <div class="col-12 col-lg-6">
+    <div class="card shadow-sm">
+        <div class="card-body">
+        <h2 class="h6">Pacjent</h2>
+        <dl class="kv">
+            <dt>Imię i nazwisko</dt><dd>{{.PatientName}}</dd>
+            <dt>PESEL</dt><dd>{{.PatientPESEL}}</dd>
+            <dt>Wiek</dt><dd>{{.PatientAge}}</dd>
+            <dt>Płeć</dt><dd>{{.PatientSex}}</dd>
+        </dl>
+        </div>
+    </div>
+    </div>
+
+    <div class="col-12">
+    <div class="card shadow-sm">
+        <div class="card-body">
+        <h2 class="h6">SAMPLE</h2>
+        <dl class="kv">
+            <dt>Objawy</dt><dd>{{.Symptoms}}</dd>
+            <dt>Alergie</dt><dd>{{.Allergies}}</dd>
+            <dt>Leki</dt><dd>{{.Medications}}</dd>
+            <dt>Przeszłość</dt><dd>{{.Past}}</dd>
+            <dt>Ostatni posiłek/płyny</dt><dd>{{.LastIntake}}</dd>
+            <dt>Zdarzenia</dt><dd>{{.Events}}</dd>
+        </dl>
+        </div>
+    </div>
+    </div>
+
+    <div class="col-12">
+    <div class="card shadow-sm">
+        <div class="card-body">
+        <h2 class="h6">Parametry życiowe</h2>
+        <div class="d-flex flex-wrap gap-2">
+            {{if gt .HR 0}}<span class="badge text-bg-primary vital-badge">HR {{.HR}}</span>{{end}}
+            {{if gt .SpO2 0}}<span class="badge text-bg-primary vital-badge">SpO₂ {{.SpO2}}%</span>{{end}}
+            {{if or (gt .BPSys 0) (gt .BPDia 0)}}<span class="badge text-bg-primary vital-badge">BP {{.BPSys}}/{{.BPDia}}</span>{{end}}
+            {{if gt .Glucose 0}}<span class="badge text-bg-primary vital-badge">Glu {{.Glucose}}</span>{{end}}
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="col-12">
+    <div class="card shadow-sm">
+        <div class="card-body">
+        <h2 class="h6">Dodatkowe</h2>
+        <dl class="kv">
+            <dt>Interwencje</dt><dd>{{.Interventions}}</dd>
+            <dt>Przekazanie</dt><dd>{{.Handoff}}</dd>
+            <dt>Notatki</dt><dd>{{.Notes}}</dd>
+        </dl>
+        </div>
+    </div>
+    </div>
+</div>
+{{end}}
+{{end}}
+
+{{define "detail"}}
+  {{template "layout" .}}
+{{end}}
