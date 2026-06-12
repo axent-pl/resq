@@ -15,7 +15,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
         <h2 class="h6">Zdarzenie</h2>
-        <dl class="kv">
+        <dl class="kv kv-modal">
             <dt>Data</dt><dd>{{.IncidentTime.Format "2006-01-02 15:04"}}</dd>
             <dt>Miejsce</dt><dd>{{.IncidentLocation}}</dd>
             <dt>Zespół</dt><dd>{{.TeamID}}</dd>
@@ -29,7 +29,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
         <h2 class="h6">Pacjent</h2>
-        <dl class="kv">
+        <dl class="kv kv-modal">
             <dt>Imię i nazwisko</dt><dd>{{.PatientName}}</dd>
             <dt>PESEL</dt><dd>{{.PatientPESEL}}</dd>
             <dt>Wiek</dt><dd>{{.PatientAge}}</dd>
@@ -43,7 +43,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
         <h2 class="h6">SAMPLE</h2>
-        <dl class="kv">
+        <dl class="kv kv-modal">
             <dt>Objawy</dt><dd>{{.Symptoms}}</dd>
             <dt>Alergie</dt><dd>{{.Allergies}}</dd>
             <dt>Leki</dt><dd>{{.Medications}}</dd>
@@ -73,7 +73,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
         <h2 class="h6">Dodatkowe</h2>
-        <dl class="kv">
+        <dl class="kv kv-modal">
             <dt>Interwencje</dt><dd>{{.Interventions}}</dd>
             <dt>Przekazanie</dt><dd>{{.Handoff}}</dd>
             <dt>Notatki</dt><dd>{{.Notes}}</dd>

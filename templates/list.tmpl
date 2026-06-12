@@ -68,7 +68,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
         </div>
         <div class="modal-body">
-            <dl class="kv">
+            <dl class="kv kv-modal">
             <dt>Data zdarzenia</dt><dd>{{.IncidentTime.Format "2006-01-02 15:04"}}</dd>
             <dt>Miejsce</dt><dd>{{.IncidentLocation}}</dd>
             <dt>Pacjent</dt><dd>{{.PatientName}} {{if gt .PatientAge 0}}({{.PatientAge}}){{end}} {{.PatientSex}}</dd>
