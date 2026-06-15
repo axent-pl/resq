@@ -1,14 +1,20 @@
 {{define "title"}}{{.Report.IncidentLocation}} &bull; {{.Report.IncidentTime.Format "2006-01-02 15:04"}} (v{{.Report.Version}}){{end}}
+
 {{define "content"}}
-{{with .Report}}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 mb-0">{{.IncidentLocation}} &bull; {{.IncidentTime.Format "2006-01-02 15:04"}} <span class="badge text-bg-secondary">v{{.Version}}</span></h1>
-    <div class="d-flex gap-2">
-    <a class="btn btn-outline-dark btn-sm" href="/reports/history/{{.Id}}">Historia</a>
-    <a class="btn btn-outline-primary btn-sm" href="/reports/edit/{{.Id}}?v={{.Version}}">Edytuj</a>
-    <a class="btn btn-success btn-sm" href="/reports/version/{{.Id}}?v={{.Version}}">Nowa wersja</a>
-    </div>
-</div>
+    {{with .Report}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h4 mb-0">{{.IncidentLocation}} &bull; {{.IncidentTime.Format "2006-01-02 15:04"}} <span class="badge text-bg-secondary">v{{.Version}}</span></h1>
+            <div class="d-flex gap-2">
+            <a class="btn btn-outline-dark btn-sm" href="/reports/history/{{.Id}}">Historia</a>
+            <a class="btn btn-outline-primary btn-sm" href="/reports/edit/{{.Id}}?v={{.Version}}">Edytuj</a>
+            <a class="btn btn-success btn-sm" href="/reports/version/{{.Id}}?v={{.Version}}">Nowa wersja</a>
+            </div>
+        </div>
+        {{template "detail_body" .}}
+    {{end}}
+{{end}}
+
+{{define "detail_body"}}
 <style>
     .kv-modal > .row > div:first-child { font-weight: 600; }
 </style>
@@ -85,8 +91,23 @@
     </div>
 </div>
 {{end}}
+
+{{define "xhr_view"}}
+    {{with .Report}}
+        <div class="modal-header">
+            <h5 class="modal-title">{{.IncidentLocation}} &bull; {{.IncidentTime.Format "2006-01-02 15:04"}} <span class="badge text-bg-secondary">v{{.Version}}</span></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+        </div>
+        <div class="modal-body">
+            {{template "detail_body" .}}
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-outline-primary" href="/reports/view/{{.Id}}?v={{.Version}}">Szczegóły</a>
+            <a class="btn btn-primary" href="/reports/edit/{{.Id}}?v={{.Version}}">Edytuj</a>
+        </div>
+    {{end}}
 {{end}}
 
-{{define "detail"}}
+{{define "full_view"}}
   {{template "layout" .}}
 {{end}}

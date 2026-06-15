@@ -40,8 +40,9 @@
     {{block "content" .}}{{end}}
   </main>
 
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
+    <script>
     // Sync helper for dual inputs (number <-> range) within .measure-widget blocks
     document.addEventListener('input', function(e){
       const root = e.target.closest('.measure-widget');

@@ -49,14 +49,18 @@ var (
 	pages           map[string]*template.Template
 )
 
-func ExecuteTemplate(wr io.Writer, page string, data any) error {
+func ExecuteTemplate(wr io.Writer, page string, xhr bool, data any) error {
+	view := "full_view"
+	if xhr {
+		view = "xhr_view"
+	}
 	if tpl, ok := pages[page]; ok {
-		return tpl.ExecuteTemplate(wr, page, data)
+		return tpl.ExecuteTemplate(wr, view, data)
 	}
 	t := template.Must(templateService.Clone())
 	t = template.Must(t.ParseFiles(fmt.Sprintf("templates/%s.tmpl", page)))
 	pages[page] = t
-	return pages[page].ExecuteTemplate(wr, page, data)
+	return pages[page].ExecuteTemplate(wr, view, data)
 }
 
 func init() {

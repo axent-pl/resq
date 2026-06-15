@@ -61,13 +61,13 @@ func listReportsHandler(w http.ResponseWriter, r *http.Request) {
 	data.Pagination.Page = 1
 	data.Pagination.TotalPages = 1
 
-	if err := ExecuteTemplate(w, "list", data); err != nil {
+	if err := ExecuteTemplate(w, "list", r.Header.Get("HX-Request") == "true", data); err != nil {
 		slog.Error(fmt.Sprintf("could not execute 'list' template: %v", err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
-func readReportHandler(w http.ResponseWriter, r *http.Request) {
+func viewReportHandler(w http.ResponseWriter, r *http.Request) {
 	session := SessionFromRequest(r)
 	id := r.PathValue("id")
 	version := r.URL.Query().Get("v")
@@ -82,7 +82,8 @@ func readReportHandler(w http.ResponseWriter, r *http.Request) {
 		CurrentUser: session.Username,
 		Report:      report,
 	}
-	if err := ExecuteTemplate(w, "detail", data); err != nil {
+
+	if err := ExecuteTemplate(w, "detail", r.Header.Get("HX-Request") == "true", data); err != nil {
 		slog.Error(fmt.Sprintf("could not execute 'detail' template: %v", err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -108,13 +109,13 @@ func historyHandler(w http.ResponseWriter, r *http.Request) {
 		ReportID:    id,
 		Reports:     versions,
 	}
-	if err := ExecuteTemplate(w, "history", data); err != nil {
+	if err := ExecuteTemplate(w, "history", r.Header.Get("HX-Request") == "true", data); err != nil {
 		slog.Error(fmt.Sprintf("could not execute 'history' template: %v", err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
-func newReportHandler(w http.ResponseWriter, r *http.Request) {
+func createReportHandler(w http.ResponseWriter, r *http.Request) {
 	session := SessionFromRequest(r)
 	if r.Method == http.MethodGet {
 		data := FormPageData{
@@ -128,7 +129,7 @@ func newReportHandler(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 
-		if err := ExecuteTemplate(w, "form", data); err != nil {
+		if err := ExecuteTemplate(w, "form", r.Header.Get("HX-Request") == "true", data); err != nil {
 			slog.Error(fmt.Sprintf("could not execute 'form' template: %v", err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -156,7 +157,7 @@ func newReportHandler(w http.ResponseWriter, r *http.Request) {
 				},
 				ValidationErrors: ve.Errors,
 			}
-			if errTpl := ExecuteTemplate(w, "form", data); errTpl != nil {
+			if errTpl := ExecuteTemplate(w, "form", r.Header.Get("HX-Request") == "true", data); errTpl != nil {
 				slog.Error(fmt.Sprintf("could not execute 'form' template: %v", errTpl))
 				http.Error(w, errTpl.Error(), http.StatusInternalServerError)
 			}
@@ -188,7 +189,7 @@ func editReportHandler(w http.ResponseWriter, r *http.Request) {
 			Action:      r.URL.Path,
 			Report:      report,
 		}
-		if err := ExecuteTemplate(w, "form", data); err != nil {
+		if err := ExecuteTemplate(w, "form", r.Header.Get("HX-Request") == "true", data); err != nil {
 			slog.Error(fmt.Sprintf("could not execute 'form' template: %v", err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -236,7 +237,7 @@ func newVersionHandler(w http.ResponseWriter, r *http.Request) {
 			Mode:        "new-version",
 			Report:      baseReport,
 		}
-		if err := ExecuteTemplate(w, "form", data); err != nil {
+		if err := ExecuteTemplate(w, "form", r.Header.Get("HX-Request") == "true", data); err != nil {
 			slog.Error(fmt.Sprintf("could not execute 'form' template: %v", err))
 		}
 		return

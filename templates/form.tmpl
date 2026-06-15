@@ -138,7 +138,7 @@
   {{ $id := printf "%s" .Name }}
   <div class="measure-widget mb-3">
     <div class="d-flex align-items-center justify-content-between mb-1">
-      <label class="form-label mb-0" for="{{$id}}-num">{{.Label}}</label>
+    <label class="form-label mb-0" for="{{$id}}-num">{{.Label}}</label>
       <div class="form-check form-switch">
         <input class="form-check-input" type="checkbox" id="{{$id}}-cb" name="measured_{{.Name}}" {{if .Checked}}checked{{end}}>
         <label class="form-check-label small" for="{{$id}}-cb">Zmierzone</label>
@@ -152,6 +152,6 @@
   </div>
 {{end}}
 
-{{define "form"}}
+{{define "full_view"}}
 {{template "layout" dict "Mode" .Mode "Report" .Report "CSRFToken" .CSRFToken "ValidationErrors" .ValidationErrors }}
 {{end}}
