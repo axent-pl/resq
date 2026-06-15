@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -40,9 +41,10 @@ func getFilter(r *http.Request) ReportFilter {
 }
 
 func listReportsHandler(w http.ResponseWriter, r *http.Request) {
+	session := SessionFromRequest(r)
 	data := ListPageData{
 		CSRFToken:   "dummy_csrf",
-		CurrentUser: "demo.user",
+		CurrentUser: session.Username,
 	}
 	data.Authors = []string{"demo.user", "team.lead"}
 	data.Filters.Author = r.URL.Query().Get("author")
@@ -66,6 +68,7 @@ func listReportsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func readReportHandler(w http.ResponseWriter, r *http.Request) {
+	session := SessionFromRequest(r)
 	id := r.PathValue("id")
 	version := r.URL.Query().Get("v")
 	report, err := readReportWithOptionalVersion(id, version)
@@ -76,7 +79,7 @@ func readReportHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	data := DetailPageData{
 		CSRFToken:   "dummy_csrf",
-		CurrentUser: "demo.user",
+		CurrentUser: session.Username,
 		Report:      report,
 	}
 	if err := ExecuteTemplate(w, "detail", data); err != nil {
@@ -86,6 +89,7 @@ func readReportHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func historyHandler(w http.ResponseWriter, r *http.Request) {
+	session := SessionFromRequest(r)
 	id := r.PathValue("id")
 	versions, err := reportService.ListVersions(id)
 	if err != nil {
@@ -100,7 +104,7 @@ func historyHandler(w http.ResponseWriter, r *http.Request) {
 
 	data := HistoryPageData{
 		CSRFToken:   "dummy_csrf",
-		CurrentUser: "demo.user",
+		CurrentUser: session.Username,
 		ReportID:    id,
 		Reports:     versions,
 	}
@@ -111,13 +115,16 @@ func historyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func newReportHandler(w http.ResponseWriter, r *http.Request) {
+	session := SessionFromRequest(r)
 	if r.Method == http.MethodGet {
 		data := FormPageData{
-			CSRFToken: "dummy_csrf",
-			Action:    r.URL.Path,
-			Mode:      "create",
+			CSRFToken:   "dummy_csrf",
+			CurrentUser: session.Username,
+			Action:      r.URL.Path,
+			Mode:        "create",
 			Report: Report{
 				IncidentTime: time.Now(),
+				Author:       session.Username,
 			},
 		}
 
@@ -134,7 +141,27 @@ func newReportHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "bad request", 400)
 		return
 	}
+	report.Author = session.Username
 	if _, err := reportService.Create(*report); err != nil {
+		var ve ValidationErrors
+		if errors.As(err, &ve) {
+			data := FormPageData{
+				CSRFToken:   "dummy_csrf",
+				CurrentUser: session.Username,
+				Action:      r.URL.Path,
+				Mode:        "create1",
+				Report: Report{
+					IncidentTime: time.Now(),
+					Author:       session.Username,
+				},
+				ValidationErrors: ve.Errors,
+			}
+			if errTpl := ExecuteTemplate(w, "form", data); errTpl != nil {
+				slog.Error(fmt.Sprintf("could not execute 'form' template: %v", errTpl))
+				http.Error(w, errTpl.Error(), http.StatusInternalServerError)
+			}
+			return
+		}
 		slog.Error(fmt.Sprintf("could not create report: %v", err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -143,6 +170,7 @@ func newReportHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func editReportHandler(w http.ResponseWriter, r *http.Request) {
+	session := SessionFromRequest(r)
 	id := r.PathValue("id")
 	version := r.URL.Query().Get("v")
 	report, err := readReportWithOptionalVersion(id, version)
@@ -155,7 +183,7 @@ func editReportHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		data := FormPageData{
 			CSRFToken:   "dummy_csrf",
-			CurrentUser: "demo.user",
+			CurrentUser: session.Username,
 			Mode:        "edit",
 			Action:      r.URL.Path,
 			Report:      report,
@@ -189,6 +217,7 @@ func editReportHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func newVersionHandler(w http.ResponseWriter, r *http.Request) {
+	session := SessionFromRequest(r)
 	id := r.PathValue("id")
 	baseVersion := r.URL.Query().Get("v")
 	baseReport, err := readReportWithOptionalVersion(id, baseVersion)
@@ -202,7 +231,7 @@ func newVersionHandler(w http.ResponseWriter, r *http.Request) {
 		baseReport.Version++
 		data := FormPageData{
 			CSRFToken:   "dummy_csrf",
-			CurrentUser: "demo.user",
+			CurrentUser: session.Username,
 			Action:      r.URL.Path,
 			Mode:        "new-version",
 			Report:      baseReport,

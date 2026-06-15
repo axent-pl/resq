@@ -36,12 +36,12 @@ type HistoryPageData struct {
 }
 
 type FormPageData struct {
-	CSRFToken   string
-	CurrentUser string
-	Action      string // URL to submit the form to
-	Mode        string // "create", "edit", "new-version"
-	Report      Report
-	Errors      map[string]string
+	CSRFToken        string
+	CurrentUser      string
+	Action           string // URL to submit the form to
+	Mode             string // "create", "edit", "new-version"
+	Report           Report
+	ValidationErrors map[string]ValidationError
 }
 
 var (

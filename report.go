@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/axent-pl/resq/storage"
@@ -44,6 +45,31 @@ type Report struct {
 	Notes         string `form:"notes"`
 	Interventions string `form:"interventions"`
 	Handoff       string `form:"handoff"`
+}
+
+type ValidationError struct {
+	Field   string
+	Message string
+}
+
+type ValidationErrors struct {
+	Errors map[string]ValidationError
+}
+
+func (e ValidationErrors) Error() string {
+	if len(e.Errors) == 0 {
+		return "0 validation error(s)"
+	}
+	fields := make([]string, 0, len(e.Errors))
+	for field := range e.Errors {
+		fields = append(fields, field)
+	}
+	sort.Strings(fields)
+	messages := make([]string, 0, len(e.Errors))
+	for _, field := range fields {
+		messages = append(messages, e.Errors[field].Message)
+	}
+	return fmt.Sprintf("%d validation error(s): %s", len(e.Errors), strings.Join(messages, "; "))
 }
 
 func (r *Report) IsFromDate(dateStr string) bool {
@@ -156,12 +182,32 @@ func (s *ReportService) FindLatestBy(filter func(Report) bool) ([]Report, error)
 	return result, nil
 }
 
+func (s *ReportService) Validate(report Report) error {
+	errs := ValidationErrors{Errors: map[string]ValidationError{}}
+	if strings.TrimSpace(report.Author) == "" {
+		errs.Errors["Author"] = ValidationError{"Author", "Author is required"}
+	}
+	if report.IncidentTime.IsZero() {
+		errs.Errors["IncidentTime"] = ValidationError{"IncidentTime", "Incident Time is required"}
+	}
+	if strings.TrimSpace(report.IncidentLocation) == "" {
+		errs.Errors["IncidentLocation"] = ValidationError{"IncidentLocation", "Incident Location is required"}
+	}
+	if len(errs.Errors) > 0 {
+		return errs
+	}
+	return nil
+}
+
 func (s *ReportService) Create(report Report) (Report, error) {
 	if report.Id == "" {
 		report.Id = uuid.NewString()
 	}
 	if report.Version <= 0 {
 		report.Version = 1
+	}
+	if err := s.Validate(report); err != nil {
+		return Report{}, err
 	}
 	if err := s.store.Create(s.reportKey(report.Id, report.Version), report); err != nil {
 		return Report{}, err

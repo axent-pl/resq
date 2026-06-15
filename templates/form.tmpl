@@ -3,6 +3,7 @@
 <form class="needs-validation" novalidate method="POST" action="{{ .Action }}">
 <input type="hidden" name="csrf" value="{{.CSRFToken}}">
 
+
 <div class="form-section">
     <h2 class="h6">Zdarzenie</h2>
     <div class="row g-2">
@@ -10,9 +11,15 @@
             <label for="incident_time" class="form-label">Czas zdarzenia</label>
             <input id="incident_time" type="datetime-local" class="form-control" name="incident_time" value="{{.Report.IncidentTime.Format "2006-01-02T15:04"}}" required>
         </div>
+
+        {{$incidentLocationError := ""}}
+        {{if .ValidationErrors }}{{with index .ValidationErrors "IncidentLocation"}}{{$incidentLocationError = .Message}}{{end}}{{end}}
         <div class="col-12 col-md-6">
             <label for="incident_location" class="form-label">Miejsce</label>
-            <input id="incident_location" type="text" class="form-control" name="incident_location" value="{{.Report.IncidentLocation}}" required>
+            <input id="incident_location" type="text" class="form-control{{if $incidentLocationError}} is-invalid{{end}}" name="incident_location" value="{{.Report.IncidentLocation}}" required>
+            {{if $incidentLocationError}}
+                <div class="invalid-feedback">{{$incidentLocationError}}</div>
+            {{end}}
         </div>
         <div class="col-12 col-md-6">
             <label for="team_id" class="form-label">Zespół</label>
@@ -146,5 +153,5 @@
 {{end}}
 
 {{define "form"}}
-{{template "layout" dict "Mode" .Mode "Report" .Report "CSRFToken" .CSRFToken}}
+{{template "layout" dict "Mode" .Mode "Report" .Report "CSRFToken" .CSRFToken "ValidationErrors" .ValidationErrors }}
 {{end}}
