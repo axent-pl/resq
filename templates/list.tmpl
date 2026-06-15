@@ -28,18 +28,15 @@
 {{range .Reports}}
     <div class="col">
     <div class="card card-hover shadow-sm h-100">
-        <div class="card-body">
+        <div class="card-body d-flex flex-column">
         <div class="d-flex justify-content-between align-items-start mb-2">
-            <h6 class="card-title mb-0">Raport #{{.Id}}</h6>
+            <h6 class="card-title mb-0">{{.IncidentLocation}} &bull; {{.IncidentTime.Format "2006-01-02 15:04"}}</h6>
             <span class="badge text-bg-secondary">v{{.Version}}</span>
         </div>
-        <div class="small text-body-secondary mb-2">
-            {{.IncidentTime.Format "2006-01-02 15:04"}} • {{.IncidentLocation}}
-        </div>
         <div class="mb-2">
-            <span class="badge rounded-pill text-bg-light">{{.PatientName}}</span>
-            {{if gt .PatientAge 0}}<span class="badge rounded-pill text-bg-light">{{.PatientAge}} lat</span>{{end}}
-            {{if .PatientSex}}<span class="badge rounded-pill text-bg-light">{{.PatientSex}}</span>{{end}}
+            <span class="badge text-bg-light">{{.PatientName}}</span>
+            {{if gt .PatientAge 0}}<span class="badge text-bg-light">{{.PatientAge}} lat</span>{{end}}
+            {{if .PatientSex}}<span class="badge text-bg-light">{{.PatientSex}}</span>{{end}}
         </div>
         <div class="d-flex flex-wrap gap-1 mb-2">
             {{if gt .HR 0}}<span class="badge text-bg-primary vital-badge">HR {{.HR}}</span>{{end}}
@@ -48,44 +45,72 @@
             {{if gt .Glucose 0}}<span class="badge text-bg-primary vital-badge">Glu {{.Glucose}}</span>{{end}}
         </div>
         <p class="card-text text-truncate">{{.Symptoms}}</p>
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#m-{{.Id}}-{{.Version}}">Podgląd</button>
-            <a class="btn btn-outline-primary btn-sm" href="/reports/view/{{.Id}}?v={{.Version}}">Szczegóły</a>
-            <a class="btn btn-primary btn-sm" href="/reports/edit/{{.Id}}?v={{.Version}}">Edytuj</a>
+        <div class="d-flex gap-2 mt-auto">
+            <button class="btn btn-outline-secondary btn-sm js-report-preview" type="button" data-report-url="/reports/view/{{.Id}}?v={{.Version}}" data-report-title="{{.IncidentLocation}} &bull; {{.IncidentTime.Format "2006-01-02 15:04"}} (v{{.Version}})" data-edit-url="/reports/edit/{{.Id}}?v={{.Version}}">Szczegóły</button>
+            <a class="btn btn-primary btn-sm" href="/reports/edit/{{.Id}}?v={{.Version}}">Edycja</a>
             <a class="btn btn-success btn-sm" href="/reports/version/{{.Id}}?v={{.Version}}">Kolejne badanie</a>
         </div>
         </div>
     </div>
     </div>
-
-    <!-- Modal preview -->
-    <div class="modal fade" id="m-{{.Id}}-{{.Version}}" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Raport #{{.Id}} (v{{.Version}})</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
-        </div>
-        <div class="modal-body">
-            <dl class="kv kv-modal">
-            <dt>Data zdarzenia</dt><dd>{{.IncidentTime.Format "2006-01-02 15:04"}}</dd>
-            <dt>Miejsce</dt><dd>{{.IncidentLocation}}</dd>
-            <dt>Pacjent</dt><dd>{{.PatientName}} {{if gt .PatientAge 0}}({{.PatientAge}}){{end}} {{.PatientSex}}</dd>
-            {{if .Symptoms}}<dt>Objawy</dt><dd>{{.Symptoms}}</dd>{{end}}
-            {{if .Interventions}}<dt>Interwencje</dt><dd>{{.Interventions}}</dd>{{end}}
-            {{if .Notes}}<dt>Notatki</dt><dd>{{.Notes}}</dd>{{end}}
-            </dl>
-        </div>
-        <div class="modal-footer">
-            <a class="btn btn-outline-primary" href="/reports/view/{{.Id}}?v={{.Version}}">Szczegóły</a>
-            <a class="btn btn-primary" href="/reports/edit/{{.Id}}?v={{.Version}}">Edytuj</a>
-        </div>
-        </div>
-    </div>
-    </div>
-
 {{end}}
 </div>
+
+<div class="modal fade" id="report-preview-modal" tabindex="-1" aria-hidden="true">
+<div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="report-preview-title">Podgląd raportu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zamknij"></button>
+    </div>
+    <div class="modal-body" id="report-preview-body">
+        <div class="text-center py-4">
+        <div class="spinner-border" role="status"><span class="visually-hidden">Ładowanie...</span></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-outline-primary" id="report-preview-details" href="#">Szczegóły</a>
+        <a class="btn btn-primary" id="report-preview-edit" href="#">Edytuj</a>
+    </div>
+    </div>
+</div>
+</div>
+
+    <div class="mt-4">
+      <a class="btn btn-primary w-100" href="/reports/new">Nowa interwencja</a>
+    </div>
+
+<script>
+document.addEventListener('click', async function(e) {
+    const button = e.target.closest('.js-report-preview');
+    if (!button) return;
+
+    const modalEl = document.getElementById('report-preview-modal');
+    const titleEl = document.getElementById('report-preview-title');
+    const bodyEl = document.getElementById('report-preview-body');
+    const detailsEl = document.getElementById('report-preview-details');
+    const editEl = document.getElementById('report-preview-edit');
+    const url = button.dataset.reportUrl;
+
+    titleEl.textContent = button.dataset.reportTitle || 'Podgląd raportu';
+    detailsEl.href = url;
+    editEl.href = button.dataset.editUrl;
+    bodyEl.innerHTML = '<div class="text-center py-4"><div class="spinner-border" role="status"><span class="visually-hidden">Ładowanie...</span></div></div>';
+    bootstrap.Modal.getOrCreateInstance(modalEl).show();
+
+    try {
+        const response = await fetch(url, {headers: {'X-Requested-With': 'fetch'}});
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const main = doc.querySelector('main');
+        bodyEl.innerHTML = main ? main.innerHTML : html;
+        bodyEl.querySelector('.d-flex.justify-content-between.align-items-center.mb-3')?.remove();
+    } catch (err) {
+        bodyEl.innerHTML = '<div class="alert alert-danger mb-0">Nie udało się załadować szczegółów raportu.</div>';
+    }
+});
+</script>
 
 {{/* Pagination (optional) */}}
 {{with .Pagination}}

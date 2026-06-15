@@ -1,27 +1,29 @@
-{{define "title"}}Raport #{{.Report.Id}} (v{{.Report.Version}}){{end}}
+{{define "title"}}{{.Report.IncidentLocation}} &bull; {{.Report.IncidentTime.Format "2006-01-02 15:04"}} (v{{.Report.Version}}){{end}}
 {{define "content"}}
 {{with .Report}}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 mb-0">Raport #{{.Id}} <span class="badge text-bg-secondary">v{{.Version}}</span></h1>
+    <h1 class="h4 mb-0">{{.IncidentLocation}} &bull; {{.IncidentTime.Format "2006-01-02 15:04"}} <span class="badge text-bg-secondary">v{{.Version}}</span></h1>
     <div class="d-flex gap-2">
     <a class="btn btn-outline-dark btn-sm" href="/reports/history/{{.Id}}">Historia</a>
     <a class="btn btn-outline-primary btn-sm" href="/reports/edit/{{.Id}}?v={{.Version}}">Edytuj</a>
     <a class="btn btn-success btn-sm" href="/reports/version/{{.Id}}?v={{.Version}}">Nowa wersja</a>
     </div>
 </div>
-
+<style>
+    .kv-modal > .row > div:first-child { font-weight: 600; }
+</style>
 <div class="row g-3">
     <div class="col-12 col-lg-6">
     <div class="card shadow-sm">
         <div class="card-body">
         <h2 class="h6">Zdarzenie</h2>
-        <dl class="kv kv-modal">
-            <dt>Data</dt><dd>{{.IncidentTime.Format "2006-01-02 15:04"}}</dd>
-            <dt>Miejsce</dt><dd>{{.IncidentLocation}}</dd>
-            <dt>Zespół</dt><dd>{{.TeamID}}</dd>
-            <dt>Autor</dt><dd>{{.Author}}</dd>
-            <dt>Urządzenie</dt><dd>{{.DeviceLat}}, {{.DeviceLng}}</dd>
-        </dl>
+        <div class="kv kv-modal">
+            <div class="row gx-2"><div class="col-5">Data</div><div class="col-7">{{.IncidentTime.Format "2006-01-02 15:04"}}</div></div>
+            <div class="row gx-2"><div class="col-5{{if not .IncidentLocation}} text-muted{{end}}">Miejsce</div><div class="col-7">{{.IncidentLocation}}</div></div>
+            <div class="row gx-2"><div class="col-5{{if not .TeamID}} text-muted{{end}}">Zespół</div><div class="col-7">{{.TeamID}}</div></div>
+            <div class="row gx-2"><div class="col-5{{if not .Author}} text-muted{{end}}">Autor</div><div class="col-7">{{.Author}}</div></div>
+            <div class="row gx-2"><div class="col-5{{if not (or .DeviceLat .DeviceLng)}} text-muted{{end}}">Urządzenie</div><div class="col-7">{{if or .DeviceLat .DeviceLng}}{{.DeviceLat}}, {{.DeviceLng}}{{end}}</div></div>
+        </div>
         </div>
     </div>
     </div>
@@ -29,12 +31,12 @@
     <div class="card shadow-sm">
         <div class="card-body">
         <h2 class="h6">Pacjent</h2>
-        <dl class="kv kv-modal">
-            <dt>Imię i nazwisko</dt><dd>{{.PatientName}}</dd>
-            <dt>PESEL</dt><dd>{{.PatientPESEL}}</dd>
-            <dt>Wiek</dt><dd>{{.PatientAge}}</dd>
-            <dt>Płeć</dt><dd>{{.PatientSex}}</dd>
-        </dl>
+        <div class="kv kv-modal">
+            <div class="row gx-2"><div class="col-5{{if not .PatientName}} text-muted{{end}}">Imię i nazwisko</div><div class="col-7">{{.PatientName}}</div></div>
+            <div class="row gx-2"><div class="col-5{{if not .PatientPESEL}} text-muted{{end}}">PESEL</div><div class="col-7">{{.PatientPESEL}}</div></div>
+            <div class="row gx-2"><div class="col-5{{if not .PatientAge}} text-muted{{end}}">Wiek</div><div class="col-7">{{.PatientAge}}</div></div>
+            <div class="row gx-2"><div class="col-5{{if not .PatientSex}} text-muted{{end}}">Płeć</div><div class="col-7">{{.PatientSex}}</div></div>
+        </div>
         </div>
     </div>
     </div>
@@ -43,14 +45,14 @@
     <div class="card shadow-sm">
         <div class="card-body">
         <h2 class="h6">SAMPLE</h2>
-        <dl class="kv kv-modal">
-            <dt>Objawy</dt><dd>{{.Symptoms}}</dd>
-            <dt>Alergie</dt><dd>{{.Allergies}}</dd>
-            <dt>Leki</dt><dd>{{.Medications}}</dd>
-            <dt>Przeszłość</dt><dd>{{.Past}}</dd>
-            <dt>Ostatni posiłek/płyny</dt><dd>{{.LastIntake}}</dd>
-            <dt>Zdarzenia</dt><dd>{{.Events}}</dd>
-        </dl>
+        <div class="kv kv-modal">
+            <div class="row gx-2"><div class="col-3{{if not .Symptoms}} text-muted{{end}}">Symptomy</div><div class="col-9" style="white-space: pre-wrap;">{{.Symptoms}}</div></div>
+            <div class="row gx-2"><div class="col-3{{if not .Allergies}} text-muted{{end}}">Alergie</div><div class="col-9" style="white-space: pre-wrap;">{{.Allergies}}</div></div>
+            <div class="row gx-2"><div class="col-3{{if not .Medications}} text-muted{{end}}">Leki</div><div class="col-9" style="white-space: pre-wrap;">{{.Medications}}</div></div>
+            <div class="row gx-2"><div class="col-3{{if not .Past}} text-muted{{end}}">Przeszłość</div><div class="col-9" style="white-space: pre-wrap;">{{.Past}}</div></div>
+            <div class="row gx-2"><div class="col-3{{if not .LastIntake}} text-muted{{end}}">Ostatni posiłek/płyny</div><div class="col-9" style="white-space: pre-wrap;">{{.LastIntake}}</div></div>
+            <div class="row gx-2"><div class="col-3{{if not .Events}} text-muted{{end}}">Zdarzenia</div><div class="col-9" style="white-space: pre-wrap;">{{.Events}}</div></div>
+        </div>
         </div>
     </div>
     </div>
@@ -73,11 +75,11 @@
     <div class="card shadow-sm">
         <div class="card-body">
         <h2 class="h6">Dodatkowe</h2>
-        <dl class="kv kv-modal">
-            <dt>Interwencje</dt><dd>{{.Interventions}}</dd>
-            <dt>Przekazanie</dt><dd>{{.Handoff}}</dd>
-            <dt>Notatki</dt><dd>{{.Notes}}</dd>
-        </dl>
+        <div class="kv kv-modal">
+            <div class="row gx-2"><div class="col-3{{if not .Interventions}} text-muted{{end}}">Interwencje</div><div class="col-9" style="white-space: pre-wrap;">{{.Interventions}}</div></div>
+            <div class="row gx-2"><div class="col-3{{if not .Handoff}} text-muted{{end}}">Przekazanie</div><div class="col-9" style="white-space: pre-wrap;">{{.Handoff}}</div></div>
+            <div class="row gx-2"><div class="col-3{{if not .Notes}} text-muted{{end}}">Notatki</div><div class="col-9" style="white-space: pre-wrap;">{{.Notes}}</div></div>
+        </div>
         </div>
     </div>
     </div>
