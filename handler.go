@@ -2,6 +2,7 @@ package main
 
 import (
 	"archive/zip"
+	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -12,6 +13,7 @@ import (
 	"time"
 
 	"github.com/axent-pl/resq/utils"
+	"github.com/go-webauthn/webauthn/webauthn"
 )
 
 const XHR_EVENT_REPORT_UPDATED utils.XhrEvent = "reportUpdated"
@@ -458,4 +460,114 @@ func readReportWithOptionalVersion(id string, version string) (Report, error) {
 		return Report{}, fmt.Errorf("invalid version %q", version)
 	}
 	return reportService.ReadVersion(id, v)
+}
+
+func handlePasskey(webAuthn *webauthn.WebAuthn, w http.ResponseWriter, r *http.Request, session *Session) {
+	if session == nil {
+		http.Error(w, "missing session", http.StatusInternalServerError)
+		return
+	}
+
+	switch r.URL.Path {
+	case "/passkey/register/begin":
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		var req struct {
+			Username string `json:"username"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "bad request", http.StatusBadRequest)
+			return
+		}
+		user, err := getOrCreatePasskeyUser(req.Username)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		creation, webAuthnSession, err := webAuthn.BeginRegistration(user)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		session.WebAuthnSession = webAuthnSession
+		session.PasskeyUsername = user.Username
+		writeJSON(w, creation)
+
+	case "/passkey/register/finish":
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		if session.WebAuthnSession == nil || session.PasskeyUsername == "" {
+			http.Error(w, "registration not started", http.StatusBadRequest)
+			return
+		}
+		user := getPasskeyUserByName(session.PasskeyUsername)
+		if user == nil {
+			http.Error(w, "user not found", http.StatusBadRequest)
+			return
+		}
+		credential, err := webAuthn.FinishRegistration(user, *session.WebAuthnSession, r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		addPasskeyCredential(user.Username, *credential)
+		session.Username = user.Username
+		session.WebAuthnSession = nil
+		session.PasskeyUsername = ""
+		writeJSON(w, map[string]string{"username": user.Username})
+
+	case "/passkey/login/begin":
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		assertion, webAuthnSession, err := webAuthn.BeginDiscoverableLogin()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		session.WebAuthnSession = webAuthnSession
+		session.PasskeyUsername = ""
+		writeJSON(w, assertion)
+
+	case "/passkey/login/finish":
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		if session.WebAuthnSession == nil {
+			http.Error(w, "login not started", http.StatusBadRequest)
+			return
+		}
+		user, credential, err := webAuthn.FinishPasskeyLogin(findPasskeyUser, *session.WebAuthnSession, r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		passkeyUser := user.(*passkeyUser)
+		updatePasskeyCredential(passkeyUser.Username, *credential)
+		session.Username = passkeyUser.Username
+		session.WebAuthnSession = nil
+		writeJSON(w, map[string]string{"username": passkeyUser.Username})
+
+	case "/passkey/logout":
+		session.Username = "anonymous"
+		session.WebAuthnSession = nil
+		session.PasskeyUsername = ""
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+
+	default:
+		http.NotFound(w, r)
+	}
+}
+
+func writeJSON(w http.ResponseWriter, v any) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	if err := json.NewEncoder(w).Encode(v); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

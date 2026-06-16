@@ -14,7 +14,7 @@ import (
 	"github.com/go-webauthn/webauthn/webauthn"
 )
 
-const passkeyUsersPath = "passkey_users.json"
+const passkeyUsersPath = "data/users.json"
 
 type passkeyUser struct {
 	ID          []byte

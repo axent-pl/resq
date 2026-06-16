@@ -270,7 +270,7 @@ var reportService *ReportService
 
 func init() {
 	var err error
-	reportService, err = NewReportService("reports.json")
+	reportService, err = NewReportService("data/reports.json")
 	if err != nil {
 		log.Fatalf("report service init error: %v", err)
 	}
