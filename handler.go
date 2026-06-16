@@ -1,8 +1,11 @@
 package main
 
 import (
+	"archive/zip"
+	"encoding/xml"
 	"errors"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -40,6 +43,170 @@ func getFilter(r *http.Request) ReportFilter {
 		}
 		return true
 	}
+}
+
+func exportReportsHandler(w http.ResponseWriter, r *http.Request) {
+	reports, err := reportService.List()
+	if err != nil {
+		slog.Error("could not fetch reports for export", "error", err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	filename := fmt.Sprintf("reports-%s.xlsx", time.Now().Format("20060102-150405"))
+	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	w.Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, filename))
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+
+	zw := zip.NewWriter(w)
+	if err := writeReportsXLSX(zw, reports); err != nil {
+		slog.Error("could not write reports xlsx", "error", err.Error())
+		return
+	}
+	if err := zw.Close(); err != nil {
+		slog.Error("could not close reports xlsx", "error", err.Error())
+	}
+}
+
+func writeReportsXLSX(zw *zip.Writer, reports []Report) error {
+	files := []struct {
+		name string
+		body string
+	}{
+		{
+			name: "[Content_Types].xml",
+			body: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+				`<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">` +
+				`<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>` +
+				`<Default Extension="xml" ContentType="application/xml"/>` +
+				`<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>` +
+				`<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>` +
+				`</Types>`,
+		},
+		{
+			name: "_rels/.rels",
+			body: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+				`<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +
+				`<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>` +
+				`</Relationships>`,
+		},
+		{
+			name: "xl/workbook.xml",
+			body: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+				`<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">` +
+				`<sheets><sheet name="Reports" sheetId="1" r:id="rId1"/></sheets>` +
+				`</workbook>`,
+		},
+		{
+			name: "xl/_rels/workbook.xml.rels",
+			body: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+				`<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +
+				`<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>` +
+				`</Relationships>`,
+		},
+	}
+
+	for _, file := range files {
+		fw, err := zw.Create(file.name)
+		if err != nil {
+			return err
+		}
+		if _, err := fw.Write([]byte(file.body)); err != nil {
+			return err
+		}
+	}
+
+	fw, err := zw.Create("xl/worksheets/sheet1.xml")
+	if err != nil {
+		return err
+	}
+	if _, err := fmt.Fprint(fw, `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>`); err != nil {
+		return err
+	}
+
+	headers := []string{
+		"Id", "Version", "Author", "TeamID", "DeviceLat", "DeviceLng", "IncidentTime", "IncidentLocation",
+		"PatientName", "PatientAge", "PatientPESEL", "PatientSex", "Symptoms", "Allergies", "Medications",
+		"Past", "LastIntake", "Events", "HR", "SpO2", "BPSys", "BPDia", "Glucose", "Notes", "Interventions", "Handoff",
+	}
+	if err := writeXLSXRow(fw, headers, nil); err != nil {
+		return err
+	}
+
+	for _, report := range reports {
+		values := []string{
+			report.Id,
+			"",
+			report.Author,
+			report.TeamID,
+			report.DeviceLat,
+			report.DeviceLng,
+			report.IncidentTime.Format("2006-01-02 15:04:05"),
+			report.IncidentLocation,
+			report.PatientName,
+			"",
+			report.PatientPESEL,
+			report.PatientSex,
+			report.Symptoms,
+			report.Allergies,
+			report.Medications,
+			report.Past,
+			report.LastIntake,
+			report.Events,
+			"",
+			"",
+			"",
+			"",
+			"",
+			report.Notes,
+			report.Interventions,
+			report.Handoff,
+		}
+		numbers := map[int]int{
+			1:  report.Version,
+			9:  report.PatientAge,
+			18: report.HR,
+			19: report.SpO2,
+			20: report.BPSys,
+			21: report.BPDia,
+			22: report.Glucose,
+		}
+		if err := writeXLSXRow(fw, values, numbers); err != nil {
+			return err
+		}
+	}
+
+	_, err = fmt.Fprint(fw, `</sheetData></worksheet>`)
+	return err
+}
+
+func writeXLSXRow(w io.Writer, values []string, numbers map[int]int) error {
+	if _, err := fmt.Fprint(w, `<row>`); err != nil {
+		return err
+	}
+	for i, value := range values {
+		if number, ok := numbers[i]; ok {
+			if _, err := fmt.Fprintf(w, `<c><v>%d</v></c>`, number); err != nil {
+				return err
+			}
+			continue
+		}
+		if _, err := fmt.Fprint(w, `<c t="inlineStr"><is><t>`); err != nil {
+			return err
+		}
+		if err := xmlEscapeText(w, value); err != nil {
+			return err
+		}
+		if _, err := fmt.Fprint(w, `</t></is></c>`); err != nil {
+			return err
+		}
+	}
+	_, err := fmt.Fprint(w, `</row>`)
+	return err
+}
+
+func xmlEscapeText(w io.Writer, text string) error {
+	return xml.EscapeText(w, []byte(text))
 }
 
 func listReportsHandler(w http.ResponseWriter, r *http.Request) {
@@ -207,6 +374,7 @@ func editReportHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		updatedReport.Id = id
 		updatedReport.Version = report.Version
+		updatedReport.Author = session.Username
 		if _, err := reportService.Update(*updatedReport, UpdateModeOverwriteVersion); err != nil {
 			slog.Error(fmt.Sprintf("could not update report: %v", err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -259,6 +427,7 @@ func newVersionHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		updatedReport.Id = id
 		updatedReport.Version = baseReport.Version + 1
+		updatedReport.Author = session.Username
 		if _, err := reportService.Update(*updatedReport, ""); err != nil {
 			slog.Error(fmt.Sprintf("could not create new report version: %v", err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)

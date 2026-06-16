@@ -3,7 +3,7 @@ package main
 
 // - kazdy widzi tylko swoje raporty
 // - wybrani widza wiecej (zarzad)
-// - eksport do Excel/CSV
+// + eksport do Excel/CSV
 // - publikacja
 // - logowanie przez konto google
 
@@ -21,5 +21,6 @@ func main() {
 	mux.HandleFunc("/reports/history/{id}", historyHandler)
 	mux.HandleFunc("/reports/edit/{id}", editReportHandler)
 	mux.HandleFunc("/reports/version/{id}", newVersionHandler)
+	mux.HandleFunc("/reports/export", exportReportsHandler)
 	log.Fatal(http.ListenAndServe(":1234", sessionMiddleware(mux)))
 }
