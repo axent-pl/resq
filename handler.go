@@ -305,38 +305,43 @@ func createReportHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	report := &Report{}
-	if err := utils.Unmarshal(r, report); err != nil {
-		slog.Error(fmt.Sprintf("could not unmarshal report data: %v", err))
-		http.Error(w, "bad request", 400)
-		return
-	}
-	report.Author = session.Username
-	if _, err := reportService.Create(*report); err != nil {
-		var ve ValidationErrors
-		if errors.As(err, &ve) {
-			data := FormPageData{
-				CSRFToken:   "dummy_csrf",
-				CurrentUser: session.Username,
-				Action:      r.URL.Path,
-				Mode:        "create1",
-				Report: Report{
-					IncidentTime: time.Now(),
-					Author:       session.Username,
-				},
-				ValidationErrors: ve.Errors,
-			}
-			if errTpl := ExecuteTemplate(w, "form", utils.IsXhr(r), data); errTpl != nil {
-				slog.Error(fmt.Sprintf("could not execute 'form' template: %v", errTpl))
-				http.Error(w, errTpl.Error(), http.StatusInternalServerError)
-			}
+	if r.Method == http.MethodPost {
+		report := &Report{}
+		if err := utils.Unmarshal(r, report); err != nil {
+			slog.Error(fmt.Sprintf("could not unmarshal report data: %v", err))
+			http.Error(w, "bad request", 400)
 			return
 		}
-		slog.Error(fmt.Sprintf("could not create report: %v", err))
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		report.Author = session.Username
+		report.IncidentTime = time.Now()
+		if _, err := reportService.Create(*report); err != nil {
+			var ve ValidationErrors
+			if errors.As(err, &ve) {
+				data := FormPageData{
+					CSRFToken:   "dummy_csrf",
+					CurrentUser: session.Username,
+					Action:      r.URL.Path,
+					Mode:        "create",
+					Report: Report{
+						IncidentTime: time.Now(),
+						Author:       session.Username,
+					},
+					ValidationErrors: ve.Errors,
+				}
+				slog.Info("did not validate", "validation_errors", ve)
+				if errTpl := ExecuteTemplate(w, "form", utils.IsXhr(r), data); errTpl != nil {
+					slog.Error(fmt.Sprintf("could not execute 'form' template: %v", errTpl))
+					http.Error(w, errTpl.Error(), http.StatusInternalServerError)
+				}
+				return
+			}
+			slog.Error(fmt.Sprintf("could not create report: %v", err))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		http.Redirect(w, r, "/reports", http.StatusSeeOther)
 	}
-	http.Redirect(w, r, "/reports", http.StatusSeeOther)
+	http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 }
 
 func editReportHandler(w http.ResponseWriter, r *http.Request) {

@@ -1,0 +1,72 @@
+{{define "title"}}RESQ sign in{{end}}
+
+{{define "content"}}
+
+        <label for="username">Username</label>
+        <input id="username" autocomplete="username" placeholder="name@example.com">
+        <button id="login" class="secondary">Sign in with passkey</button>
+        <button id="register">Register this device</button>
+        <p id="message"></p>
+
+    <script>
+        const message = document.getElementById('message');
+        const enc = v => btoa(String.fromCharCode(...new Uint8Array(v))).replaceAll('+', '-').replaceAll('/', '_').replaceAll('=', '');
+        const dec = v => Uint8Array.from(atob(v.replaceAll('-', '+').replaceAll('_', '/') + '==='.slice((v.length + 3) % 4)), c => c.charCodeAt(0));
+        const post = async (url, body) => {
+            const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : '{}' });
+            if (!res.ok) throw new Error(await res.text());
+            return res.json();
+        };
+        const prepCreate = o => {
+            o.publicKey.challenge = dec(o.publicKey.challenge);
+            o.publicKey.user.id = dec(o.publicKey.user.id);
+            (o.publicKey.excludeCredentials || []).forEach(c => c.id = dec(c.id));
+            return o;
+        };
+        const prepGet = o => {
+            o.publicKey.challenge = dec(o.publicKey.challenge);
+            (o.publicKey.allowCredentials || []).forEach(c => c.id = dec(c.id));
+            return o;
+        };
+        const pack = c => {
+            const r = c.response;
+            const response = { clientDataJSON: enc(r.clientDataJSON) };
+            if (r.attestationObject) response.attestationObject = enc(r.attestationObject);
+            if (r.authenticatorData) response.authenticatorData = enc(r.authenticatorData);
+            if (r.signature) response.signature = enc(r.signature);
+            if (r.userHandle) response.userHandle = enc(r.userHandle);
+            if (r.getTransports) response.transports = r.getTransports();
+            return JSON.stringify({
+                id: c.id,
+                rawId: enc(c.rawId),
+                type: c.type,
+                authenticatorAttachment: c.authenticatorAttachment,
+                clientExtensionResults: c.getClientExtensionResults(),
+                response
+            });
+        };
+        document.getElementById('register').onclick = async () => {
+            try {
+                message.textContent = '';
+                const username = document.getElementById('username').value.trim();
+                const options = prepCreate(await post('/passkey/register/begin', { username }));
+                const credential = await navigator.credentials.create(options);
+                await fetch('/passkey/register/finish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: pack(credential) });
+                location.reload();
+            } catch (e) { message.textContent = e.message; }
+        };
+        document.getElementById('login').onclick = async () => {
+            try {
+                message.textContent = '';
+                const options = prepGet(await post('/passkey/login/begin'));
+                const credential = await navigator.credentials.get(options);
+                await fetch('/passkey/login/finish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: pack(credential) });
+                location.reload();
+            } catch (e) { message.textContent = e.message; }
+        };
+    </script>
+{{end}}
+
+{{define "full_view"}}
+  {{template "layout" .}}
+{{end}}

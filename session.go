@@ -6,6 +6,8 @@ import (
 	"encoding/hex"
 	"net/http"
 	"sync"
+
+	"github.com/go-webauthn/webauthn/webauthn"
 )
 
 const sessionCookieName = "resq_session"
@@ -13,7 +15,9 @@ const sessionCookieName = "resq_session"
 type sessionContextKey struct{}
 
 type Session struct {
-	Username string
+	Username        string
+	WebAuthnSession *webauthn.SessionData
+	PasskeyUsername string
 }
 
 var sessions = struct {
