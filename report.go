@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"log/slog"
 	"sort"
 	"strings"
 	"time"
@@ -144,11 +145,32 @@ func (s *ReportService) latestVersionNumber(id string) (int, error) {
 }
 
 func (s *ReportService) List(username string) ([]Report, error) {
-	return s.store.List()
+	allReports, err := s.store.List()
+	if err != nil {
+		return nil, err
+	}
+	filter := accessFilter(username, func(Report) bool { return true })
+	result := []Report{}
+	for _, report := range allReports {
+		if filter(report) {
+			result = append(result, report)
+		}
+	}
+	return result, nil
+}
+
+func accessFilter(username string, filter func(Report) bool) func(Report) bool {
+	if userService.HasRole(username, "ADMIN") {
+		slog.Info("accessFilter", "username", username, "is_admin", true)
+		return filter
+	}
+	return func(report Report) bool {
+		return report.Author == username && filter(report)
+	}
 }
 
 func (s *ReportService) FindBy(username string, filter func(Report) bool) ([]Report, error) {
-	return s.store.FindBy(filter)
+	return s.store.FindBy(accessFilter(username, filter))
 }
 
 func (s *ReportService) FindLatestBy(username string, filter func(Report) bool) ([]Report, error) {
@@ -165,9 +187,10 @@ func (s *ReportService) FindLatestBy(username string, filter func(Report) bool) 
 		}
 	}
 
+	extendedFilter := accessFilter(username, filter)
 	result := make([]Report, 0, len(latestByID))
 	for _, report := range latestByID {
-		if filter(report) {
+		if extendedFilter(report) {
 			result = append(result, report)
 		}
 	}
@@ -223,6 +246,7 @@ func (s *ReportService) Read(username string, id string) (Report, error) {
 	if len(versions) == 0 {
 		return Report{}, errors.New("not found")
 	}
+
 	return versions[len(versions)-1], nil
 }
 
