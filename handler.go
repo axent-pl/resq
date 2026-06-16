@@ -11,6 +11,8 @@ import (
 	"github.com/axent-pl/resq/utils"
 )
 
+const XHR_EVENT_REPORT_UPDATED utils.XhrEvent = "reportUpdated"
+
 func getFilter(r *http.Request) ReportFilter {
 	filters := make([]ReportFilter, 0)
 
@@ -61,7 +63,7 @@ func listReportsHandler(w http.ResponseWriter, r *http.Request) {
 	data.Pagination.Page = 1
 	data.Pagination.TotalPages = 1
 
-	if err := ExecuteTemplate(w, "list", r.Header.Get("HX-Request") == "true", data); err != nil {
+	if err := ExecuteTemplate(w, "list", utils.IsXhr(r), data); err != nil {
 		slog.Error(fmt.Sprintf("could not execute 'list' template: %v", err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -83,7 +85,7 @@ func viewReportHandler(w http.ResponseWriter, r *http.Request) {
 		Report:      report,
 	}
 
-	if err := ExecuteTemplate(w, "detail", r.Header.Get("HX-Request") == "true", data); err != nil {
+	if err := ExecuteTemplate(w, "detail", utils.IsXhr(r), data); err != nil {
 		slog.Error(fmt.Sprintf("could not execute 'detail' template: %v", err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -109,7 +111,7 @@ func historyHandler(w http.ResponseWriter, r *http.Request) {
 		ReportID:    id,
 		Reports:     versions,
 	}
-	if err := ExecuteTemplate(w, "history", r.Header.Get("HX-Request") == "true", data); err != nil {
+	if err := ExecuteTemplate(w, "history", utils.IsXhr(r), data); err != nil {
 		slog.Error(fmt.Sprintf("could not execute 'history' template: %v", err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -129,7 +131,7 @@ func createReportHandler(w http.ResponseWriter, r *http.Request) {
 			},
 		}
 
-		if err := ExecuteTemplate(w, "form", r.Header.Get("HX-Request") == "true", data); err != nil {
+		if err := ExecuteTemplate(w, "form", utils.IsXhr(r), data); err != nil {
 			slog.Error(fmt.Sprintf("could not execute 'form' template: %v", err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -157,7 +159,7 @@ func createReportHandler(w http.ResponseWriter, r *http.Request) {
 				},
 				ValidationErrors: ve.Errors,
 			}
-			if errTpl := ExecuteTemplate(w, "form", r.Header.Get("HX-Request") == "true", data); errTpl != nil {
+			if errTpl := ExecuteTemplate(w, "form", utils.IsXhr(r), data); errTpl != nil {
 				slog.Error(fmt.Sprintf("could not execute 'form' template: %v", errTpl))
 				http.Error(w, errTpl.Error(), http.StatusInternalServerError)
 			}
@@ -189,7 +191,7 @@ func editReportHandler(w http.ResponseWriter, r *http.Request) {
 			Action:      r.URL.Path,
 			Report:      report,
 		}
-		if err := ExecuteTemplate(w, "form", r.Header.Get("HX-Request") == "true", data); err != nil {
+		if err := ExecuteTemplate(w, "form", utils.IsXhr(r), data); err != nil {
 			slog.Error(fmt.Sprintf("could not execute 'form' template: %v", err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -208,6 +210,11 @@ func editReportHandler(w http.ResponseWriter, r *http.Request) {
 		if _, err := reportService.Update(*updatedReport, UpdateModeOverwriteVersion); err != nil {
 			slog.Error(fmt.Sprintf("could not update report: %v", err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if utils.IsXhr(r) {
+			utils.TriggerXhrEvent(w, XHR_EVENT_REPORT_UPDATED)
+			viewReportHandler(w, r)
 			return
 		}
 		http.Redirect(w, r, "/reports", http.StatusSeeOther)
@@ -237,7 +244,7 @@ func newVersionHandler(w http.ResponseWriter, r *http.Request) {
 			Mode:        "new-version",
 			Report:      baseReport,
 		}
-		if err := ExecuteTemplate(w, "form", r.Header.Get("HX-Request") == "true", data); err != nil {
+		if err := ExecuteTemplate(w, "form", utils.IsXhr(r), data); err != nil {
 			slog.Error(fmt.Sprintf("could not execute 'form' template: %v", err))
 		}
 		return
