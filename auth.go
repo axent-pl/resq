@@ -98,7 +98,7 @@ func savePasskeyUsersLocked() error {
 	return os.Rename(tmpFile.Name(), passkeyUsersPath)
 }
 
-func getOrCreatePasskeyUser(username string) (*passkeyUser, error) {
+func createPasskeyUser(username string) (*passkeyUser, error) {
 	username = strings.TrimSpace(username)
 	if username == "" || len(username) > 128 {
 		return nil, errors.New("username is required")
@@ -107,7 +107,7 @@ func getOrCreatePasskeyUser(username string) (*passkeyUser, error) {
 	passkeyUsers.Lock()
 	defer passkeyUsers.Unlock()
 	if user := passkeyUsers.byName[username]; user != nil {
-		return user, nil
+		return nil, errors.New("user already exist")
 	}
 
 	id := make([]byte, 32)

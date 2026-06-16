@@ -48,7 +48,8 @@ func getFilter(r *http.Request) ReportFilter {
 }
 
 func exportReportsHandler(w http.ResponseWriter, r *http.Request) {
-	reports, err := reportService.List()
+	session := SessionFromRequest(r)
+	reports, err := reportService.List(session.Username)
 	if err != nil {
 		slog.Error("could not fetch reports for export", "error", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -221,7 +222,7 @@ func listReportsHandler(w http.ResponseWriter, r *http.Request) {
 	data.Filters.Author = r.URL.Query().Get("author")
 	data.Filters.Day = r.URL.Query().Get("day")
 
-	reports, err := reportService.FindLatestBy(getFilter(r))
+	reports, err := reportService.FindLatestBy(session.Username, getFilter(r))
 	if err != nil {
 		slog.Error("could not fetch reports list", "error", err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -242,7 +243,7 @@ func viewReportHandler(w http.ResponseWriter, r *http.Request) {
 	session := SessionFromRequest(r)
 	id := r.PathValue("id")
 	version := r.URL.Query().Get("v")
-	report, err := readReportWithOptionalVersion(id, version)
+	report, err := readReportWithOptionalVersion(session.Username, id, version)
 	if err != nil {
 		slog.Error(fmt.Sprintf("could not find report: %v", err))
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -263,7 +264,7 @@ func viewReportHandler(w http.ResponseWriter, r *http.Request) {
 func historyHandler(w http.ResponseWriter, r *http.Request) {
 	session := SessionFromRequest(r)
 	id := r.PathValue("id")
-	versions, err := reportService.ListVersions(id)
+	versions, err := reportService.ListVersions(session.Username, id)
 	if err != nil {
 		slog.Error(fmt.Sprintf("could not fetch report versions: %v", err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -350,7 +351,7 @@ func editReportHandler(w http.ResponseWriter, r *http.Request) {
 	session := SessionFromRequest(r)
 	id := r.PathValue("id")
 	version := r.URL.Query().Get("v")
-	report, err := readReportWithOptionalVersion(id, version)
+	report, err := readReportWithOptionalVersion(session.Username, id, version)
 	if err != nil {
 		slog.Error(fmt.Sprintf("could not find report: %v", err))
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -403,7 +404,7 @@ func newVersionHandler(w http.ResponseWriter, r *http.Request) {
 	session := SessionFromRequest(r)
 	id := r.PathValue("id")
 	baseVersion := r.URL.Query().Get("v")
-	baseReport, err := readReportWithOptionalVersion(id, baseVersion)
+	baseReport, err := readReportWithOptionalVersion(session.Username, id, baseVersion)
 	if err != nil {
 		slog.Error(fmt.Sprintf("could not find base report: %v", err))
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -451,15 +452,15 @@ func newVersionHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 }
 
-func readReportWithOptionalVersion(id string, version string) (Report, error) {
+func readReportWithOptionalVersion(username string, id string, version string) (Report, error) {
 	if version == "" {
-		return reportService.Read(id)
+		return reportService.Read(username, id)
 	}
 	v, err := strconv.Atoi(version)
 	if err != nil {
 		return Report{}, fmt.Errorf("invalid version %q", version)
 	}
-	return reportService.ReadVersion(id, v)
+	return reportService.ReadVersion(username, id, v)
 }
 
 func handlePasskey(webAuthn *webauthn.WebAuthn, w http.ResponseWriter, r *http.Request, session *Session) {
@@ -481,7 +482,7 @@ func handlePasskey(webAuthn *webauthn.WebAuthn, w http.ResponseWriter, r *http.R
 			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
-		user, err := getOrCreatePasskeyUser(req.Username)
+		user, err := createPasskeyUser(req.Username)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return

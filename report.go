@@ -143,15 +143,15 @@ func (s *ReportService) latestVersionNumber(id string) (int, error) {
 	return versions[len(versions)-1].Version, nil
 }
 
-func (s *ReportService) List() ([]Report, error) {
+func (s *ReportService) List(username string) ([]Report, error) {
 	return s.store.List()
 }
 
-func (s *ReportService) FindBy(filter func(Report) bool) ([]Report, error) {
+func (s *ReportService) FindBy(username string, filter func(Report) bool) ([]Report, error) {
 	return s.store.FindBy(filter)
 }
 
-func (s *ReportService) FindLatestBy(filter func(Report) bool) ([]Report, error) {
+func (s *ReportService) FindLatestBy(username string, filter func(Report) bool) ([]Report, error) {
 	allReports, err := s.store.List()
 	if err != nil {
 		return nil, err
@@ -215,7 +215,7 @@ func (s *ReportService) Create(report Report) (Report, error) {
 	return report, nil
 }
 
-func (s *ReportService) Read(id string) (Report, error) {
+func (s *ReportService) Read(username string, id string) (Report, error) {
 	versions, err := s.listVersions(id)
 	if err != nil {
 		return Report{}, err
@@ -226,11 +226,11 @@ func (s *ReportService) Read(id string) (Report, error) {
 	return versions[len(versions)-1], nil
 }
 
-func (s *ReportService) ReadVersion(id string, version int) (Report, error) {
+func (s *ReportService) ReadVersion(username string, id string, version int) (Report, error) {
 	return s.store.Read(s.reportKey(id, version))
 }
 
-func (s *ReportService) ListVersions(id string) ([]Report, error) {
+func (s *ReportService) ListVersions(username string, id string) ([]Report, error) {
 	return s.listVersions(id)
 }
 
