@@ -123,16 +123,15 @@
     </div>
     </div>
 </div>
-
-<div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
-    <a href="/reports" class="btn btn-outline-secondary">Anuluj</a>
-    <button type="submit" class="btn btn-primary">Zapisz</button>
-</div>
 {{end}}
 
 {{define "content"}}
 <form class="needs-validation" novalidate method="POST" action="{{ .Action }}">
     {{template "inputs"}}
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
+        <a href="/reports" class="btn btn-outline-secondary">Anuluj</a>
+        <button type="submit" class="btn btn-primary">Zapisz</button>
+    </div>
 </form>
 {{end}}
 
@@ -168,5 +167,9 @@
     {{ end }}
     <form class="modal-body needs-validation" novalidate method="POST" action="{{ .Action }}" hx-post="{{ .Action }}" hx-target="#report-details-content" hx-swap="innerHTML">
         {{template "inputs" .}}
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+        </div>
     </form>
 {{end}}

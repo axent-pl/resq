@@ -250,19 +250,29 @@ func newVersionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	report := &Report{}
-	if err := utils.Unmarshal(r, report); err != nil {
-		slog.Error(fmt.Sprintf("could not unmarshal report data: %v", err))
-		http.Error(w, "bad request", 400)
+	if r.Method == http.MethodPost {
+		updatedReport := &Report{}
+		if err := utils.Unmarshal(r, updatedReport); err != nil {
+			slog.Error(fmt.Sprintf("could not unmarshal report data: %v", err))
+			http.Error(w, "bad request", 400)
+			return
+		}
+		updatedReport.Id = id
+		updatedReport.Version = baseReport.Version + 1
+		if _, err := reportService.Update(*updatedReport, ""); err != nil {
+			slog.Error(fmt.Sprintf("could not create new report version: %v", err))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if utils.IsXhr(r) {
+			utils.TriggerXhrEvent(w, XHR_EVENT_REPORT_UPDATED)
+			viewReportHandler(w, r)
+			return
+		}
+		http.Redirect(w, r, "/reports", http.StatusSeeOther)
 		return
 	}
-	report.Id = id
-	if _, err := reportService.Update(*report, ""); err != nil {
-		slog.Error(fmt.Sprintf("could not create new report version: %v", err))
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	http.Redirect(w, r, "/reports", http.StatusSeeOther)
+	http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 }
 
 func readReportWithOptionalVersion(id string, version string) (Report, error) {

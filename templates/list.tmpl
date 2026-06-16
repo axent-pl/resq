@@ -24,7 +24,7 @@
         <div class="d-flex gap-2 mt-auto">
             <button class="btn btn-outline-secondary btn-sm" type="button" hx-get="/reports/view/{{.Id}}?v={{.Version}}" hx-target="#report-details-content" hx-swap="innerHTML" data-bs-toggle="modal" data-bs-target="#report-details-modal">Szczegóły</button>
             <button class="btn btn-primary btn-sm" type="button" hx-get="/reports/edit/{{.Id}}?v={{.Version}}" hx-target="#report-details-content" hx-swap="innerHTML" data-bs-toggle="modal" data-bs-target="#report-details-modal">Edycja</button>
-            <a class="btn btn-success btn-sm" href="/reports/version/{{.Id}}?v={{.Version}}">Kolejne badanie</a>
+            <button class="btn btn-success btn-sm" type="button" hx-get="/reports/version/{{.Id}}?v={{.Version}}" hx-target="#report-details-content" hx-swap="innerHTML" data-bs-toggle="modal" data-bs-target="#report-details-modal">Kolejne badanie</button>
         </div>
         </div>
     </div>

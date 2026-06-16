@@ -102,8 +102,8 @@
             {{template "detail_body" .}}
         </div>
         <div class="modal-footer">
-            <a class="btn btn-outline-primary" href="/reports/view/{{.Id}}?v={{.Version}}">Szczegóły</a>
-            <a class="btn btn-primary" href="/reports/edit/{{.Id}}?v={{.Version}}">Edytuj</a>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Anuluj</button>
+            <a class="btn btn-primary" href="/reports/edit/{{.Id}}?v={{.Version}}" hx-get="/reports/edit/{{.Id}}?v={{.Version}}" hx-target="#report-details-content" hx-swap="innerHTML">Edytuj</a>
         </div>
     {{end}}
 {{end}}
