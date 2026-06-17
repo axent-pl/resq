@@ -1,0 +1,29 @@
+services:
+  resq:
+    build:
+      context: .
+    restart: unless-stopped
+    environment:
+      PORT: 1234
+      RP_ID: ${RESQ_DOMAIN}
+      RP_ORIGINS: https://${RESQ_DOMAIN}
+    volumes:
+      - ./run/resq_data:/app/data
+    expose:
+      - "1234"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - resq
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      RESQ_DOMAIN: ${RESQ_DOMAIN}
+    volumes:
+      - ./run/caddy_etc/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./run/caddy_data:/data
+      - ./run/caddy_config:/config

@@ -12,6 +12,7 @@ import (
 	"log"
 	"log/slog"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/axent-pl/resq/utils"
@@ -28,14 +29,14 @@ func main() {
 	mux.HandleFunc("/reports/edit/{id}", editReportHandler)
 	mux.HandleFunc("/reports/version/{id}", newVersionHandler)
 	mux.HandleFunc("/reports/export", exportReportsHandler)
-	log.Fatal(http.ListenAndServe(":1234", sessionMiddleware(passkeyMiddleware(mux))))
+	log.Fatal(http.ListenAndServe(listenAddr(), sessionMiddleware(passkeyMiddleware(mux))))
 }
 
 func passkeyMiddleware(next http.Handler) http.Handler {
 	webAuthn, err := webauthn.New(&webauthn.Config{
-		RPDisplayName: "RESQ",
-		RPID:          "localhost",
-		RPOrigins:     []string{"http://localhost:1234"},
+		RPDisplayName: envString("RP_DISPLAY_NAME", "RESQ"),
+		RPID:          envString("RP_ID", "localhost"),
+		RPOrigins:     envList("RP_ORIGINS", []string{"http://localhost:1234"}),
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -56,4 +57,38 @@ func passkeyMiddleware(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+func listenAddr() string {
+	port := envString("PORT", "1234")
+	if strings.Contains(port, ":") {
+		return port
+	}
+	return ":" + port
+}
+
+func envString(key, fallback string) string {
+	if value := strings.TrimSpace(os.Getenv(key)); value != "" {
+		return value
+	}
+	return fallback
+}
+
+func envList(key string, fallback []string) []string {
+	value := os.Getenv(key)
+	if strings.TrimSpace(value) == "" {
+		return fallback
+	}
+
+	parts := strings.Split(value, ",")
+	result := make([]string, 0, len(parts))
+	for _, part := range parts {
+		if trimmed := strings.TrimSpace(part); trimmed != "" {
+			result = append(result, trimmed)
+		}
+	}
+	if len(result) == 0 {
+		return fallback
+	}
+	return result
 }
