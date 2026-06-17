@@ -33,7 +33,7 @@
 {{end}}
 
 {{define "content"}}
-<form class="row g-2 align-items-end mb-3" method="GET" action="/reports">
+<!-- <form class="row g-2 align-items-end mb-3" method="GET" action="/reports">
 <input type="hidden" name="csrf" value="{{.CSRFToken}}">
 <div class="col-12 col-sm-5">
     <label class="form-label" for="filter-author">Autor</label>
@@ -51,7 +51,7 @@
 <div class="col-12 col-sm-2 d-grid">
     <button class="btn btn-primary" type="submit">Filtruj</button>
 </div>
-</form>
+</form> -->
 
 {{if not .Reports}}
 <div class="alert alert-info">Brak raportów spełniających kryteria.</div>
