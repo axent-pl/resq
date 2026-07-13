@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ResQ\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-13 09:43+0200\n"
+"POT-Creation-Date: 2026-07-13 10:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,525 +17,523 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: cmd/resq/model/model.go:81
+#: model/model.go:81
 msgid "Unknown"
 msgstr ""
 
-#: cmd/resq/model/model.go:81
+#: model/model.go:81
 msgid "unknown"
 msgstr ""
 
-#: cmd/resq/model/model.go:82
+#: model/model.go:82
 msgid "Male"
 msgstr ""
 
-#: cmd/resq/model/model.go:82
+#: model/model.go:82
 msgid "male"
 msgstr ""
 
-#: cmd/resq/model/model.go:83
+#: model/model.go:83
 msgid "Female"
 msgstr ""
 
-#: cmd/resq/model/model.go:83
+#: model/model.go:83
 msgid "female"
 msgstr ""
 
-#: cmd/resq/model/model.go:84
+#: model/model.go:84
 msgid "Other"
 msgstr ""
 
-#: cmd/resq/model/model.go:84
+#: model/model.go:84
 msgid "other"
 msgstr ""
 
-#: cmd/resq/model/model.go:113
+#: model/model.go:113
 msgid "Initial assessment"
 msgstr ""
 
-#: cmd/resq/model/model.go:113
+#: model/model.go:113
 msgid "initial_assessment"
 msgstr ""
 
-#: cmd/resq/model/model.go:114
+#: model/model.go:114
 msgid "Follow-up assessment"
 msgstr ""
 
-#: cmd/resq/model/model.go:114
+#: model/model.go:114
 msgid "followup_assessment"
 msgstr ""
 
-#: cmd/resq/model/model.go:115
+#: model/model.go:115
 msgid "Intervention"
 msgstr ""
 
-#: cmd/resq/model/model.go:115
+#: model/model.go:115
 msgid "intervention"
 msgstr ""
 
-#: cmd/resq/model/model.go:116
-#: cmd/resq/service/templates/incidents_read.html:126
+#: model/model.go:116 service/templates/incidents_read.html:126
 msgid "Handoff"
 msgstr ""
 
-#: cmd/resq/model/model.go:116
+#: model/model.go:116
 msgid "handoff"
 msgstr ""
 
-#: cmd/resq/model/model.go:117
+#: model/model.go:117
 msgid "Note"
 msgstr ""
 
-#: cmd/resq/model/model.go:117
+#: model/model.go:117
 msgid "note"
 msgstr ""
 
-#: cmd/resq/model/model.go:141
+#: model/model.go:141
 msgid "Alert"
 msgstr ""
 
-#: cmd/resq/model/model.go:141
+#: model/model.go:141
 msgid "alert"
 msgstr ""
 
-#: cmd/resq/model/model.go:142
+#: model/model.go:142
 msgid "Voice"
 msgstr ""
 
-#: cmd/resq/model/model.go:142
+#: model/model.go:142
 msgid "voice"
 msgstr ""
 
-#: cmd/resq/model/model.go:143
+#: model/model.go:143
 msgid "Pain"
 msgstr ""
 
-#: cmd/resq/model/model.go:143
+#: model/model.go:143
 msgid "pain"
 msgstr ""
 
-#: cmd/resq/model/model.go:144
+#: model/model.go:144
 msgid "Unresponsive"
 msgstr ""
 
-#: cmd/resq/model/model.go:144
+#: model/model.go:144
 msgid "unresponsive"
 msgstr ""
 
-#: cmd/resq/service/template.go:114
+#: service/template.go:114
 msgid "Open"
 msgstr ""
 
-#: cmd/resq/service/template.go:116
+#: service/template.go:116
 msgid "In progress"
 msgstr ""
 
-#: cmd/resq/service/template.go:118
+#: service/template.go:118
 msgid "Handed over"
 msgstr ""
 
-#: cmd/resq/service/template.go:120
+#: service/template.go:120
 msgid "Closed"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:13
-#: cmd/resq/service/templates/events_list.html:16
+#: service/templates/events_form.html:13
+#: service/templates/events_list.html:16
 msgid "New event"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:14
-#: cmd/resq/service/templates/events_read.html:17
-#: cmd/resq/service/templates/incidents_form.html:14
-#: cmd/resq/service/templates/incidents_read.html:18
-#: cmd/resq/service/templates/users_form.html:14
-#: cmd/resq/service/templates/users_read.html:17
+#: service/templates/events_form.html:14
+#: service/templates/events_read.html:17
+#: service/templates/incidents_form.html:14
+#: service/templates/incidents_read.html:18
+#: service/templates/users_form.html:14
+#: service/templates/users_read.html:17
 msgid "Close"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:27
-#: cmd/resq/service/templates/incidents_form.html:28
-#: cmd/resq/service/templates/users_form.html:27
+#: service/templates/events_form.html:27
+#: service/templates/incidents_form.html:28
+#: service/templates/users_form.html:27
 msgid "Review the highlighted fields."
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:30
+#: service/templates/events_form.html:30
 msgid "Event"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:33
-#: cmd/resq/service/templates/events_read.html:29
-#: cmd/resq/service/templates/incidents_form.html:81
-#: cmd/resq/service/templates/incidents_read.html:48
+#: service/templates/events_form.html:33
+#: service/templates/events_read.html:29
+#: service/templates/incidents_form.html:81
+#: service/templates/incidents_read.html:48
 msgid "Name"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:39
+#: service/templates/events_form.html:39
 msgid "Start time"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:46
+#: service/templates/events_form.html:46
 msgid "End time"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:53
-#: cmd/resq/service/templates/events_list.html:70
-#: cmd/resq/service/templates/events_read.html:33
-#: cmd/resq/service/templates/incidents_form.html:49
-#: cmd/resq/service/templates/incidents_list.html:95
-#: cmd/resq/service/templates/incidents_read.html:34
+#: service/templates/events_form.html:53
+#: service/templates/events_list.html:70
+#: service/templates/events_read.html:33
+#: service/templates/incidents_form.html:49
+#: service/templates/incidents_list.html:95
+#: service/templates/incidents_read.html:34
 msgid "Location"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:59
-#: cmd/resq/service/templates/events_list.html:78
-#: cmd/resq/service/templates/events_read.html:45
-#: cmd/resq/service/templates/incidents_form.html:72
-#: cmd/resq/service/templates/incidents_read.html:38
+#: service/templates/events_form.html:59
+#: service/templates/events_list.html:78
+#: service/templates/events_read.html:45
+#: service/templates/incidents_form.html:72
+#: service/templates/incidents_read.html:38
 msgid "Description"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:66
-#: cmd/resq/service/templates/events_list.html:12
-#: cmd/resq/service/templates/incidents_form.html:137
-#: cmd/resq/service/templates/incidents_read.html:108
-#: cmd/resq/service/templates/layout.html:36
+#: service/templates/events_form.html:66
+#: service/templates/events_list.html:12
+#: service/templates/incidents_form.html:137
+#: service/templates/incidents_read.html:108
+#: service/templates/layout.html:36
 msgid "Events"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:68
-#: cmd/resq/service/templates/incidents_form.html:192
-#: cmd/resq/service/templates/users_form.html:63
+#: service/templates/events_form.html:68
+#: service/templates/incidents_form.html:192
+#: service/templates/users_form.html:63
 msgid "Cancel"
 msgstr ""
 
-#: cmd/resq/service/templates/events_form.html:69
+#: service/templates/events_form.html:69
 msgid "Create event"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:13
+#: service/templates/events_list.html:13
 msgid "Browse and filter rescue events."
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:29
-#: cmd/resq/service/templates/incidents_list.html:29
-#: cmd/resq/service/templates/users_list.html:29
+#: service/templates/events_list.html:29
+#: service/templates/incidents_list.html:29
+#: service/templates/users_list.html:29
 msgid "Search"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:34
-#: cmd/resq/service/templates/incidents_list.html:47
+#: service/templates/events_list.html:34
+#: service/templates/incidents_list.html:47
 msgid "Started from"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:39
-#: cmd/resq/service/templates/incidents_list.html:52
+#: service/templates/events_list.html:39
+#: service/templates/incidents_list.html:52
 msgid "Started to"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:44
-#: cmd/resq/service/templates/incidents_list.html:57
-#: cmd/resq/service/templates/users_list.html:39
+#: service/templates/events_list.html:44
+#: service/templates/incidents_list.html:57
+#: service/templates/users_list.html:39
 msgid "Size"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:52
-#: cmd/resq/service/templates/incidents_list.html:65
-#: cmd/resq/service/templates/users_list.html:47
+#: service/templates/events_list.html:52
+#: service/templates/incidents_list.html:65
+#: service/templates/users_list.html:47
 msgid "Filter"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:73
-#: cmd/resq/service/templates/events_read.html:37
+#: service/templates/events_list.html:73
+#: service/templates/events_read.html:37
 msgid "Starts"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:74
-#: cmd/resq/service/templates/events_read.html:41
+#: service/templates/events_list.html:74
+#: service/templates/events_read.html:41
 msgid "Ends"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:82
-#: cmd/resq/service/templates/events_read.html:50
+#: service/templates/events_list.html:82
+#: service/templates/events_read.html:50
 msgid "No description"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:91
+#: service/templates/events_list.html:91
 msgid "No events found."
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:97
-#: cmd/resq/service/templates/incidents_list.html:119
-#: cmd/resq/service/templates/users_list.html:113
+#: service/templates/events_list.html:97
+#: service/templates/incidents_list.html:119
+#: service/templates/users_list.html:113
 #, go-format
 msgid "Page %d of %d - %d total"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:98
+#: service/templates/events_list.html:98
 msgid "Event pagination"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:103
-#: cmd/resq/service/templates/events_list.html:105
-#: cmd/resq/service/templates/incidents_list.html:125
-#: cmd/resq/service/templates/incidents_list.html:127
-#: cmd/resq/service/templates/users_list.html:119
-#: cmd/resq/service/templates/users_list.html:121
+#: service/templates/events_list.html:103
+#: service/templates/events_list.html:105
+#: service/templates/incidents_list.html:125
+#: service/templates/incidents_list.html:127
+#: service/templates/users_list.html:119
+#: service/templates/users_list.html:121
 msgid "Previous"
 msgstr ""
 
-#: cmd/resq/service/templates/events_list.html:114
-#: cmd/resq/service/templates/events_list.html:116
-#: cmd/resq/service/templates/incidents_list.html:136
-#: cmd/resq/service/templates/incidents_list.html:138
-#: cmd/resq/service/templates/users_list.html:130
-#: cmd/resq/service/templates/users_list.html:132
+#: service/templates/events_list.html:114
+#: service/templates/events_list.html:116
+#: service/templates/incidents_list.html:136
+#: service/templates/incidents_list.html:138
+#: service/templates/users_list.html:130
+#: service/templates/users_list.html:132
 msgid "Next"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:13
-#: cmd/resq/service/templates/incidents_list.html:16
+#: service/templates/incidents_form.html:13
+#: service/templates/incidents_list.html:16
 msgid "New incident"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:31
-#: cmd/resq/service/templates/incidents_read.html:6
+#: service/templates/incidents_form.html:31
+#: service/templates/incidents_read.html:6
 msgid "Incident"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:34
-#: cmd/resq/service/templates/incidents_list.html:34
-#: cmd/resq/service/templates/incidents_read.html:30
+#: service/templates/incidents_form.html:34
+#: service/templates/incidents_list.html:34
+#: service/templates/incidents_read.html:30
 msgid "Event ID"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:44
+#: service/templates/incidents_form.html:44
 msgid "Number"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:56
+#: service/templates/incidents_form.html:56
 msgid "Occured at"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:63
-#: cmd/resq/service/templates/incidents_list.html:39
+#: service/templates/incidents_form.html:63
+#: service/templates/incidents_list.html:39
 msgid "Status"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:78
-#: cmd/resq/service/templates/incidents_list.html:99
-#: cmd/resq/service/templates/incidents_read.html:43
+#: service/templates/incidents_form.html:78
+#: service/templates/incidents_list.html:99
+#: service/templates/incidents_read.html:43
 msgid "Patient"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:88
-#: cmd/resq/service/templates/incidents_read.html:52
+#: service/templates/incidents_form.html:88
+#: service/templates/incidents_read.html:52
 msgid "Age"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:93
-#: cmd/resq/service/templates/incidents_read.html:56
+#: service/templates/incidents_form.html:93
+#: service/templates/incidents_read.html:56
 msgid "Sex"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:103
-#: cmd/resq/service/templates/incidents_form.html:142
-#: cmd/resq/service/templates/incidents_read.html:60
-#: cmd/resq/service/templates/incidents_read.html:114
+#: service/templates/incidents_form.html:103
+#: service/templates/incidents_form.html:142
+#: service/templates/incidents_read.html:60
+#: service/templates/incidents_read.html:114
 msgid "Notes"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:109
+#: service/templates/incidents_form.html:109
 msgid "Initial report"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:112
-#: cmd/resq/service/templates/incidents_read.html:78
+#: service/templates/incidents_form.html:112
+#: service/templates/incidents_read.html:78
 msgid "Symptoms"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:117
-#: cmd/resq/service/templates/incidents_read.html:84
+#: service/templates/incidents_form.html:117
+#: service/templates/incidents_read.html:84
 msgid "Allergies"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:122
-#: cmd/resq/service/templates/incidents_read.html:90
+#: service/templates/incidents_form.html:122
+#: service/templates/incidents_read.html:90
 msgid "Medications"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:127
-#: cmd/resq/service/templates/incidents_read.html:96
+#: service/templates/incidents_form.html:127
+#: service/templates/incidents_read.html:96
 msgid "PastMedical"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:132
-#: cmd/resq/service/templates/incidents_read.html:102
+#: service/templates/incidents_form.html:132
+#: service/templates/incidents_read.html:102
 msgid "LastIntake"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:148
+#: service/templates/incidents_form.html:148
 msgid "First vital measurement"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:151
-#: cmd/resq/service/templates/incidents_read.html:136
+#: service/templates/incidents_form.html:151
+#: service/templates/incidents_read.html:136
 msgid "HR"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:156
-#: cmd/resq/service/templates/incidents_read.html:137
+#: service/templates/incidents_form.html:156
+#: service/templates/incidents_read.html:137
 msgid "SpO2"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:161
+#: service/templates/incidents_form.html:161
 msgid "BPSys"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:166
+#: service/templates/incidents_form.html:166
 msgid "BPDia"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:171
+#: service/templates/incidents_form.html:171
 msgid "Glucose"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:176
-#: cmd/resq/service/templates/incidents_read.html:139
+#: service/templates/incidents_form.html:176
+#: service/templates/incidents_read.html:139
 msgid "GCS"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:181
-#: cmd/resq/service/templates/incidents_read.html:140
+#: service/templates/incidents_form.html:181
+#: service/templates/incidents_read.html:140
 msgid "AVPU"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_form.html:193
+#: service/templates/incidents_form.html:193
 msgid "Create incident"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_list.html:12
-#: cmd/resq/service/templates/layout.html:37
+#: service/templates/incidents_list.html:12
+#: service/templates/layout.html:37
 msgid "Incidents"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_list.html:13
+#: service/templates/incidents_list.html:13
 msgid "Browse and filter event incidents."
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_list.html:87
+#: service/templates/incidents_list.html:87
 msgid "Started"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_list.html:90
-#: cmd/resq/service/templates/incidents_read.html:67
+#: service/templates/incidents_list.html:90
+#: service/templates/incidents_read.html:67
 msgid "Reports"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_list.html:103
+#: service/templates/incidents_list.html:103
 msgid "No patient data"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_list.html:113
+#: service/templates/incidents_list.html:113
 msgid "No incidents found."
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_list.html:120
+#: service/templates/incidents_list.html:120
 msgid "Incident pagination"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_read.html:120
+#: service/templates/incidents_read.html:120
 msgid "Interventions"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_read.html:135
+#: service/templates/incidents_read.html:135
 msgid "Measured"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_read.html:138
+#: service/templates/incidents_read.html:138
 msgid "BP"
 msgstr ""
 
-#: cmd/resq/service/templates/incidents_read.html:162
+#: service/templates/incidents_read.html:162
 msgid "No reports recorded."
 msgstr ""
 
-#: cmd/resq/service/templates/layout.html:32
+#: service/templates/layout.html:32
 msgid "Toggle navigation"
 msgstr ""
 
-#: cmd/resq/service/templates/layout.html:38
-#: cmd/resq/service/templates/users_form.html:30
-#: cmd/resq/service/templates/users_form.html:61
-#: cmd/resq/service/templates/users_list.html:12
+#: service/templates/layout.html:38 service/templates/users_form.html:30
+#: service/templates/users_form.html:61
+#: service/templates/users_list.html:12
 msgid "Users"
 msgstr ""
 
-#: cmd/resq/service/templates/users_form.html:13
-#: cmd/resq/service/templates/users_list.html:16
+#: service/templates/users_form.html:13
+#: service/templates/users_list.html:16
 msgid "New user"
 msgstr ""
 
-#: cmd/resq/service/templates/users_form.html:33
-#: cmd/resq/service/templates/users_read.html:30
+#: service/templates/users_form.html:33
+#: service/templates/users_read.html:30
 msgid "Username"
 msgstr ""
 
-#: cmd/resq/service/templates/users_form.html:39
-#: cmd/resq/service/templates/users_read.html:34
+#: service/templates/users_form.html:39
+#: service/templates/users_read.html:34
 msgid "Display name"
 msgstr ""
 
-#: cmd/resq/service/templates/users_form.html:45
-#: cmd/resq/service/templates/users_list.html:79
-#: cmd/resq/service/templates/users_read.html:44
+#: service/templates/users_form.html:45
+#: service/templates/users_list.html:79
+#: service/templates/users_read.html:44
 msgid "Email"
 msgstr ""
 
-#: cmd/resq/service/templates/users_form.html:51
-#: cmd/resq/service/templates/users_list.html:87
-#: cmd/resq/service/templates/users_read.html:54
+#: service/templates/users_form.html:51
+#: service/templates/users_list.html:87
+#: service/templates/users_read.html:54
 msgid "Phone"
 msgstr ""
 
-#: cmd/resq/service/templates/users_form.html:55
-#: cmd/resq/service/templates/users_list.html:34
-#: cmd/resq/service/templates/users_list.html:96
-#: cmd/resq/service/templates/users_read.html:64
+#: service/templates/users_form.html:55
+#: service/templates/users_list.html:34
+#: service/templates/users_list.html:96
+#: service/templates/users_read.html:64
 msgid "Role"
 msgstr ""
 
-#: cmd/resq/service/templates/users_form.html:64
+#: service/templates/users_form.html:64
 msgid "Create user"
 msgstr ""
 
-#: cmd/resq/service/templates/users_list.html:13
+#: service/templates/users_list.html:13
 msgid "Browse and filter users."
 msgstr ""
 
-#: cmd/resq/service/templates/users_list.html:73
-#: cmd/resq/service/templates/users_read.html:39
+#: service/templates/users_list.html:73
+#: service/templates/users_read.html:39
 msgid "No display name"
 msgstr ""
 
-#: cmd/resq/service/templates/users_list.html:83
-#: cmd/resq/service/templates/users_read.html:49
+#: service/templates/users_list.html:83
+#: service/templates/users_read.html:49
 msgid "No email"
 msgstr ""
 
-#: cmd/resq/service/templates/users_list.html:91
-#: cmd/resq/service/templates/users_read.html:59
+#: service/templates/users_list.html:91
+#: service/templates/users_read.html:59
 msgid "No phone"
 msgstr ""
 
-#: cmd/resq/service/templates/users_list.html:97
-#: cmd/resq/service/templates/users_read.html:69
+#: service/templates/users_list.html:97
+#: service/templates/users_read.html:69
 msgid "No role"
 msgstr ""
 
-#: cmd/resq/service/templates/users_list.html:107
+#: service/templates/users_list.html:107
 msgid "No users found."
 msgstr ""
 
-#: cmd/resq/service/templates/users_list.html:114
+#: service/templates/users_list.html:114
 msgid "User pagination"
 msgstr ""

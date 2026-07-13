@@ -1,332 +1,505 @@
 msgid ""
 msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-13 10:11+0200\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
+"|| n%100>14) ? 1 : 2);\n"
 
-msgid "Age"
-msgstr "Wiek"
-
-msgid "Allergies"
-msgstr "Alergie"
-
-msgid "Alert"
-msgstr "Przytomny"
-
-msgid "BP"
-msgstr "Cisnienie"
-
-msgid "BPDia"
-msgstr "Cisnienie rozkurczowe"
-
-msgid "BPSys"
-msgstr "Cisnienie skurczowe"
-
-msgid "Browse and filter event incidents."
-msgstr "Przegladaj i filtruj incydenty wydarzen."
-
-msgid "Browse and filter rescue events."
-msgstr "Przegladaj i filtruj wydarzenia ratownicze."
-
-msgid "Browse and filter users."
-msgstr "Przegladaj i filtruj uzytkownikow."
-
-msgid "Cancel"
-msgstr "Anuluj"
-
-msgid "Close"
-msgstr "Zamknij"
-
-msgid "Closed"
-msgstr "Zamkniety"
-
-msgid "Create event"
-msgstr "Utworz wydarzenie"
-
-msgid "Create incident"
-msgstr "Utworz incydent"
-
-msgid "Create user"
-msgstr "Utworz uzytkownika"
-
-msgid "Description"
-msgstr "Opis"
-
-msgid "Display name"
-msgstr "Nazwa wyswietlana"
-
-msgid "End time"
-msgstr "Czas zakonczenia"
-
-msgid "Ends"
-msgstr "Koniec"
-
-msgid "Email"
-msgstr "Email"
-
-msgid "Event"
-msgstr "Wydarzenie"
-
-msgid "Event ID"
-msgstr "ID wydarzenia"
-
-msgid "Event pagination"
-msgstr "Paginacja wydarzen"
-
-msgid "Events"
-msgstr "Wydarzenia"
-
-msgid "AVPU"
-msgstr "AVPU"
-
-msgid "Female"
-msgstr "Kobieta"
-
-msgid "Filter"
-msgstr "Filtruj"
-
-msgid "First vital measurement"
-msgstr "Pierwszy pomiar parametrow"
-
-msgid "Follow-up assessment"
-msgstr "Ocena kontrolna"
-
-msgid "GCS"
-msgstr "GCS"
-
-msgid "Glucose"
-msgstr "Glukoza"
-
-msgid "HR"
-msgstr "HR"
-
-msgid "Handoff"
-msgstr "Przekazanie"
-
-msgid "Handed over"
-msgstr "Przekazany"
-
-msgid "Incident"
-msgstr "Incydent"
-
-msgid "Incident pagination"
-msgstr "Paginacja incydentow"
-
-msgid "Incidents"
-msgstr "Incydenty"
-
-msgid "Initial assessment"
-msgstr "Ocena wstepna"
-
-msgid "Initial report"
-msgstr "Raport wstepny"
-
-msgid "Intervention"
-msgstr "Interwencja"
-
-msgid "Interventions"
-msgstr "Interwencje"
-
-msgid "In progress"
-msgstr "W toku"
-
-msgid "LastIntake"
-msgstr "Ostatni posilek"
-
-msgid "Location"
-msgstr "Miejsce"
-
-msgid "Male"
-msgstr "Mezczyzna"
-
-msgid "Measured"
-msgstr "Pomiar"
-
-msgid "Medications"
-msgstr "Leki"
-
-msgid "Name"
-msgstr "Nazwa"
-
-msgid "New event"
-msgstr "Nowe wydarzenie"
-
-msgid "New incident"
-msgstr "Nowy incydent"
-
-msgid "New user"
-msgstr "Nowy uzytkownik"
-
-msgid "Next"
-msgstr "Nastepna"
-
-msgid "No description"
-msgstr "Brak opisu"
-
-msgid "No display name"
-msgstr "Brak nazwy wyswietlanej"
-
-msgid "No email"
-msgstr "Brak emaila"
-
-msgid "No events found."
-msgstr "Nie znaleziono wydarzen."
-
-msgid "No incidents found."
-msgstr "Nie znaleziono incydentow."
-
-msgid "No patient data"
-msgstr "Brak danych pacjenta"
-
-msgid "No phone"
-msgstr "Brak telefonu"
-
-msgid "No reports recorded."
-msgstr "Brak zapisanych raportow."
-
-msgid "No role"
-msgstr "Brak roli"
-
-msgid "No users found."
-msgstr "Nie znaleziono uzytkownikow."
-
-msgid "Note"
-msgstr "Notatka"
-
-msgid "Notes"
-msgstr "Notatki"
-
-msgid "Number"
-msgstr "Numer"
-
-msgid "Occured at"
-msgstr "Czas wystapienia"
-
-msgid "Open"
-msgstr "Otwarty"
-
-msgid "Other"
-msgstr "Inna"
-
-#, c-format
-msgid "Page %d of %d - %d total"
-msgstr "Strona %d z %d - razem %d"
-
-msgid "Pain"
-msgstr "Bol"
-
-msgid "PastMedical"
-msgstr "Historia chorob"
-
-msgid "Patient"
-msgstr "Pacjent"
-
-msgid "Phone"
-msgstr "Telefon"
-
-msgid "Previous"
-msgstr "Poprzednia"
-
-msgid "Reports"
-msgstr "Raporty"
-
-msgid "Review the highlighted fields."
-msgstr "Sprawdz zaznaczone pola."
-
-msgid "Role"
-msgstr "Rola"
-
-msgid "Search"
-msgstr "Szukaj"
-
-msgid "Sex"
-msgstr "Plec"
-
-msgid "Size"
-msgstr "Rozmiar"
-
-msgid "SpO2"
-msgstr "SpO2"
-
-msgid "Start time"
-msgstr "Czas rozpoczecia"
-
-msgid "Started"
-msgstr "Rozpoczeto"
-
-msgid "Started from"
-msgstr "Rozpoczeto od"
-
-msgid "Started to"
-msgstr "Rozpoczeto do"
-
-msgid "Starts"
-msgstr "Poczatek"
-
-msgid "Status"
-msgstr "Status"
-
-msgid "Symptoms"
-msgstr "Objawy"
-
-msgid "Toggle navigation"
-msgstr "Przelacz nawigacje"
-
+#: model/model.go:81
 msgid "Unknown"
 msgstr "Nieznana"
 
-msgid "Unresponsive"
-msgstr "Nie reaguje"
-
-msgid "User pagination"
-msgstr "Paginacja uzytkownikow"
-
-msgid "Username"
-msgstr "Nazwa uzytkownika"
-
-msgid "Users"
-msgstr "Uzytkownicy"
-
-msgid "Voice"
-msgstr "Glos"
-
-msgid "alert"
-msgstr "Przytomny"
-
-msgid "female"
-msgstr "Kobieta"
-
-msgid "followup_assessment"
-msgstr "Ocena kontrolna"
-
-msgid "handoff"
-msgstr "Przekazanie"
-
-msgid "initial_assessment"
-msgstr "Ocena wstepna"
-
-msgid "intervention"
-msgstr "Interwencja"
-
-msgid "male"
-msgstr "Mezczyzna"
-
-msgid "note"
-msgstr "Notatka"
-
-msgid "other"
-msgstr "Inna"
-
-msgid "pain"
-msgstr "Bol"
-
+#: model/model.go:81
 msgid "unknown"
 msgstr "Nieznana"
 
+#: model/model.go:82
+msgid "Male"
+msgstr "Mezczyzna"
+
+#: model/model.go:82
+msgid "male"
+msgstr "Mezczyzna"
+
+#: model/model.go:83
+msgid "Female"
+msgstr "Kobieta"
+
+#: model/model.go:83
+msgid "female"
+msgstr "Kobieta"
+
+#: model/model.go:84
+msgid "Other"
+msgstr "Inna"
+
+#: model/model.go:84
+msgid "other"
+msgstr "Inna"
+
+#: model/model.go:113
+msgid "Initial assessment"
+msgstr "Ocena wstepna"
+
+#: model/model.go:113
+msgid "initial_assessment"
+msgstr "Ocena wstepna"
+
+#: model/model.go:114
+msgid "Follow-up assessment"
+msgstr "Ocena kontrolna"
+
+#: model/model.go:114
+msgid "followup_assessment"
+msgstr "Ocena kontrolna"
+
+#: model/model.go:115
+msgid "Intervention"
+msgstr "Interwencja"
+
+#: model/model.go:115
+msgid "intervention"
+msgstr "Interwencja"
+
+#: model/model.go:116 service/templates/incidents_read.html:126
+msgid "Handoff"
+msgstr "Przekazanie"
+
+#: model/model.go:116
+msgid "handoff"
+msgstr "Przekazanie"
+
+#: model/model.go:117
+msgid "Note"
+msgstr "Notatka"
+
+#: model/model.go:117
+msgid "note"
+msgstr "Notatka"
+
+#: model/model.go:141
+msgid "Alert"
+msgstr "Przytomny"
+
+#: model/model.go:141
+msgid "alert"
+msgstr "Przytomny"
+
+#: model/model.go:142
+msgid "Voice"
+msgstr "Glos"
+
+#: model/model.go:142
+msgid "voice"
+msgstr "Glos"
+
+#: model/model.go:143
+msgid "Pain"
+msgstr "Bol"
+
+#: model/model.go:143
+msgid "pain"
+msgstr "Bol"
+
+#: model/model.go:144
+msgid "Unresponsive"
+msgstr "Nie reaguje"
+
+#: model/model.go:144
 msgid "unresponsive"
 msgstr "Nie reaguje"
 
-msgid "voice"
-msgstr "Glos"
+#: service/template.go:114
+msgid "Open"
+msgstr "Otwarty"
+
+#: service/template.go:116
+msgid "In progress"
+msgstr "W toku"
+
+#: service/template.go:118
+msgid "Handed over"
+msgstr "Przekazany"
+
+#: service/template.go:120
+msgid "Closed"
+msgstr "Zamkniety"
+
+#: service/templates/events_form.html:13 service/templates/events_list.html:16
+msgid "New event"
+msgstr "Nowe wydarzenie"
+
+#: service/templates/events_form.html:14 service/templates/events_read.html:17
+#: service/templates/incidents_form.html:14
+#: service/templates/incidents_read.html:18
+#: service/templates/users_form.html:14 service/templates/users_read.html:17
+msgid "Close"
+msgstr "Zamknij"
+
+#: service/templates/events_form.html:27
+#: service/templates/incidents_form.html:28
+#: service/templates/users_form.html:27
+msgid "Review the highlighted fields."
+msgstr "Sprawdz zaznaczone pola."
+
+#: service/templates/events_form.html:30
+msgid "Event"
+msgstr "Wydarzenie"
+
+#: service/templates/events_form.html:33 service/templates/events_read.html:29
+#: service/templates/incidents_form.html:81
+#: service/templates/incidents_read.html:48
+msgid "Name"
+msgstr "Nazwa"
+
+#: service/templates/events_form.html:39
+msgid "Start time"
+msgstr "Czas rozpoczecia"
+
+#: service/templates/events_form.html:46
+msgid "End time"
+msgstr "Czas zakonczenia"
+
+#: service/templates/events_form.html:53 service/templates/events_list.html:70
+#: service/templates/events_read.html:33
+#: service/templates/incidents_form.html:49
+#: service/templates/incidents_list.html:95
+#: service/templates/incidents_read.html:34
+msgid "Location"
+msgstr "Miejsce"
+
+#: service/templates/events_form.html:59 service/templates/events_list.html:78
+#: service/templates/events_read.html:45
+#: service/templates/incidents_form.html:72
+#: service/templates/incidents_read.html:38
+msgid "Description"
+msgstr "Opis"
+
+#: service/templates/events_form.html:66 service/templates/events_list.html:12
+#: service/templates/incidents_form.html:137
+#: service/templates/incidents_read.html:108 service/templates/layout.html:36
+msgid "Events"
+msgstr "Wydarzenia"
+
+#: service/templates/events_form.html:68
+#: service/templates/incidents_form.html:192
+#: service/templates/users_form.html:63
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: service/templates/events_form.html:69
+msgid "Create event"
+msgstr "Utworz wydarzenie"
+
+#: service/templates/events_list.html:13
+msgid "Browse and filter rescue events."
+msgstr "Przegladaj i filtruj wydarzenia ratownicze."
+
+#: service/templates/events_list.html:29
+#: service/templates/incidents_list.html:29
+#: service/templates/users_list.html:29
+msgid "Search"
+msgstr "Szukaj"
+
+#: service/templates/events_list.html:34
+#: service/templates/incidents_list.html:47
+msgid "Started from"
+msgstr "Rozpoczeto od"
+
+#: service/templates/events_list.html:39
+#: service/templates/incidents_list.html:52
+msgid "Started to"
+msgstr "Rozpoczeto do"
+
+#: service/templates/events_list.html:44
+#: service/templates/incidents_list.html:57
+#: service/templates/users_list.html:39
+msgid "Size"
+msgstr "Rozmiar"
+
+#: service/templates/events_list.html:52
+#: service/templates/incidents_list.html:65
+#: service/templates/users_list.html:47
+msgid "Filter"
+msgstr "Filtruj"
+
+#: service/templates/events_list.html:73 service/templates/events_read.html:37
+msgid "Starts"
+msgstr "Poczatek"
+
+#: service/templates/events_list.html:74 service/templates/events_read.html:41
+msgid "Ends"
+msgstr "Koniec"
+
+#: service/templates/events_list.html:82 service/templates/events_read.html:50
+msgid "No description"
+msgstr "Brak opisu"
+
+#: service/templates/events_list.html:91
+msgid "No events found."
+msgstr "Nie znaleziono wydarzen."
+
+#: service/templates/events_list.html:97
+#: service/templates/incidents_list.html:119
+#: service/templates/users_list.html:113
+#, go-format
+msgid "Page %d of %d - %d total"
+msgstr "Strona %d z %d - razem %d"
+
+#: service/templates/events_list.html:98
+msgid "Event pagination"
+msgstr "Paginacja wydarzen"
+
+#: service/templates/events_list.html:103
+#: service/templates/events_list.html:105
+#: service/templates/incidents_list.html:125
+#: service/templates/incidents_list.html:127
+#: service/templates/users_list.html:119 service/templates/users_list.html:121
+msgid "Previous"
+msgstr "Poprzednia"
+
+#: service/templates/events_list.html:114
+#: service/templates/events_list.html:116
+#: service/templates/incidents_list.html:136
+#: service/templates/incidents_list.html:138
+#: service/templates/users_list.html:130 service/templates/users_list.html:132
+msgid "Next"
+msgstr "Nastepna"
+
+#: service/templates/incidents_form.html:13
+#: service/templates/incidents_list.html:16
+msgid "New incident"
+msgstr "Nowy incydent"
+
+#: service/templates/incidents_form.html:31
+#: service/templates/incidents_read.html:6
+msgid "Incident"
+msgstr "Incydent"
+
+#: service/templates/incidents_form.html:34
+#: service/templates/incidents_list.html:34
+#: service/templates/incidents_read.html:30
+msgid "Event ID"
+msgstr "ID wydarzenia"
+
+#: service/templates/incidents_form.html:44
+msgid "Number"
+msgstr "Numer"
+
+#: service/templates/incidents_form.html:56
+msgid "Occured at"
+msgstr "Czas wystapienia"
+
+#: service/templates/incidents_form.html:63
+#: service/templates/incidents_list.html:39
+msgid "Status"
+msgstr "Status"
+
+#: service/templates/incidents_form.html:78
+#: service/templates/incidents_list.html:99
+#: service/templates/incidents_read.html:43
+msgid "Patient"
+msgstr "Pacjent"
+
+#: service/templates/incidents_form.html:88
+#: service/templates/incidents_read.html:52
+msgid "Age"
+msgstr "Wiek"
+
+#: service/templates/incidents_form.html:93
+#: service/templates/incidents_read.html:56
+msgid "Sex"
+msgstr "Plec"
+
+#: service/templates/incidents_form.html:103
+#: service/templates/incidents_form.html:142
+#: service/templates/incidents_read.html:60
+#: service/templates/incidents_read.html:114
+msgid "Notes"
+msgstr "Notatki"
+
+#: service/templates/incidents_form.html:109
+msgid "Initial report"
+msgstr "Raport wstepny"
+
+#: service/templates/incidents_form.html:112
+#: service/templates/incidents_read.html:78
+msgid "Symptoms"
+msgstr "Objawy"
+
+#: service/templates/incidents_form.html:117
+#: service/templates/incidents_read.html:84
+msgid "Allergies"
+msgstr "Alergie"
+
+#: service/templates/incidents_form.html:122
+#: service/templates/incidents_read.html:90
+msgid "Medications"
+msgstr "Leki"
+
+#: service/templates/incidents_form.html:127
+#: service/templates/incidents_read.html:96
+msgid "PastMedical"
+msgstr "Historia chorob"
+
+#: service/templates/incidents_form.html:132
+#: service/templates/incidents_read.html:102
+msgid "LastIntake"
+msgstr "Ostatni posilek"
+
+#: service/templates/incidents_form.html:148
+msgid "First vital measurement"
+msgstr "Pierwszy pomiar parametrow"
+
+#: service/templates/incidents_form.html:151
+#: service/templates/incidents_read.html:136
+msgid "HR"
+msgstr "HR"
+
+#: service/templates/incidents_form.html:156
+#: service/templates/incidents_read.html:137
+msgid "SpO2"
+msgstr "SpO2"
+
+#: service/templates/incidents_form.html:161
+msgid "BPSys"
+msgstr "Cisnienie skurczowe"
+
+#: service/templates/incidents_form.html:166
+msgid "BPDia"
+msgstr "Cisnienie rozkurczowe"
+
+#: service/templates/incidents_form.html:171
+msgid "Glucose"
+msgstr "Glukoza"
+
+#: service/templates/incidents_form.html:176
+#: service/templates/incidents_read.html:139
+msgid "GCS"
+msgstr "GCS"
+
+#: service/templates/incidents_form.html:181
+#: service/templates/incidents_read.html:140
+msgid "AVPU"
+msgstr "AVPU"
+
+#: service/templates/incidents_form.html:193
+msgid "Create incident"
+msgstr "Utworz incydent"
+
+#: service/templates/incidents_list.html:12 service/templates/layout.html:37
+msgid "Incidents"
+msgstr "Incydenty"
+
+#: service/templates/incidents_list.html:13
+msgid "Browse and filter event incidents."
+msgstr "Przegladaj i filtruj incydenty wydarzen."
+
+#: service/templates/incidents_list.html:87
+msgid "Started"
+msgstr "Rozpoczeto"
+
+#: service/templates/incidents_list.html:90
+#: service/templates/incidents_read.html:67
+msgid "Reports"
+msgstr "Raporty"
+
+#: service/templates/incidents_list.html:103
+msgid "No patient data"
+msgstr "Brak danych pacjenta"
+
+#: service/templates/incidents_list.html:113
+msgid "No incidents found."
+msgstr "Nie znaleziono incydentow."
+
+#: service/templates/incidents_list.html:120
+msgid "Incident pagination"
+msgstr "Paginacja incydentow"
+
+#: service/templates/incidents_read.html:120
+msgid "Interventions"
+msgstr "Interwencje"
+
+#: service/templates/incidents_read.html:135
+msgid "Measured"
+msgstr "Pomiar"
+
+#: service/templates/incidents_read.html:138
+msgid "BP"
+msgstr "Cisnienie"
+
+#: service/templates/incidents_read.html:162
+msgid "No reports recorded."
+msgstr "Brak zapisanych raportow."
+
+#: service/templates/layout.html:32
+msgid "Toggle navigation"
+msgstr "Przelacz nawigacje"
+
+#: service/templates/layout.html:38 service/templates/users_form.html:30
+#: service/templates/users_form.html:61 service/templates/users_list.html:12
+msgid "Users"
+msgstr "Uzytkownicy"
+
+#: service/templates/users_form.html:13 service/templates/users_list.html:16
+msgid "New user"
+msgstr "Nowy uzytkownik"
+
+#: service/templates/users_form.html:33 service/templates/users_read.html:30
+msgid "Username"
+msgstr "Nazwa uzytkownika"
+
+#: service/templates/users_form.html:39 service/templates/users_read.html:34
+msgid "Display name"
+msgstr "Nazwa wyswietlana"
+
+#: service/templates/users_form.html:45 service/templates/users_list.html:79
+#: service/templates/users_read.html:44
+msgid "Email"
+msgstr "Email"
+
+#: service/templates/users_form.html:51 service/templates/users_list.html:87
+#: service/templates/users_read.html:54
+msgid "Phone"
+msgstr "Telefon"
+
+#: service/templates/users_form.html:55 service/templates/users_list.html:34
+#: service/templates/users_list.html:96 service/templates/users_read.html:64
+msgid "Role"
+msgstr "Rola"
+
+#: service/templates/users_form.html:64
+msgid "Create user"
+msgstr "Utworz uzytkownika"
+
+#: service/templates/users_list.html:13
+msgid "Browse and filter users."
+msgstr "Przegladaj i filtruj uzytkownikow."
+
+#: service/templates/users_list.html:73 service/templates/users_read.html:39
+msgid "No display name"
+msgstr "Brak nazwy wyswietlanej"
+
+#: service/templates/users_list.html:83 service/templates/users_read.html:49
+msgid "No email"
+msgstr "Brak emaila"
+
+#: service/templates/users_list.html:91 service/templates/users_read.html:59
+msgid "No phone"
+msgstr "Brak telefonu"
+
+#: service/templates/users_list.html:97 service/templates/users_read.html:69
+msgid "No role"
+msgstr "Brak roli"
+
+#: service/templates/users_list.html:107
+msgid "No users found."
+msgstr "Nie znaleziono uzytkownikow."
+
+#: service/templates/users_list.html:114
+msgid "User pagination"
+msgstr "Paginacja uzytkownikow"

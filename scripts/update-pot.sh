@@ -4,7 +4,7 @@ set -euo pipefail
 
 readonly script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly project_root="$(cd "${script_dir}/.." && pwd)"
-readonly output="${project_root}/cmd/resq/i18n/locales/resq.pot"
+readonly output="${project_root}/i18n/locales/resq.pot"
 
 if ! command -v xgettext >/dev/null 2>&1; then
 	echo "error: xgettext is required (install GNU gettext)" >&2
@@ -106,3 +106,13 @@ sed 's/\.html\.go:/.html:/g; s/\.tmpl\.go:/.tmpl:/g; s/\.gotmpl\.go:/.gotmpl:/g;
 mv "${output}.tmp" "${output}"
 
 echo "updated ${output#${project_root}/}"
+
+if ! command -v msgmerge >/dev/null 2>&1; then
+	echo "error: msgmerge is required (install GNU gettext)" >&2
+	exit 1
+fi
+
+while IFS= read -r -d '' catalog; do
+	msgmerge --update --backup=none "${catalog}" "${output}"
+	echo "updated ${catalog#${project_root}/}"
+done < <(find "${project_root}/i18n/locales" -type f -name '*.po' -print0)
