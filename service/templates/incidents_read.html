@@ -1,0 +1,165 @@
+{{ define "view.standard" }}
+	{{ template "layout" . }}
+{{ end }}
+
+{{ define "content" }}
+	<h1 class="h3">{{ _ .Lang "Incident" }}</h1>
+	{{ template "fragment" . }}
+{{ end }}
+
+{{ define "view.xhr" }}
+<div class="offcanvas offcanvas-end incident-offcanvas show" tabindex="-1" style="visibility: visible;"
+	aria-labelledby="incident-detail-title">
+	<div class="offcanvas-header border-bottom">
+		<div>
+			<h2 class="offcanvas-title h5" id="incident-detail-title">{{ .Incident.Number }}</h2>
+			<div class="text-muted small">{{ _ .Lang (statusText .Incident.Status) }} · {{ formatTime .Incident.OccuredAt }}</div>
+		</div>
+		<button type="button" class="btn-close" aria-label="{{ _ .Lang "Close" }}" onclick="document.getElementById('incident-panel').innerHTML = ''"></button>
+	</div>
+	<div class="offcanvas-body">
+		{{ template "fragment" . }}
+	</div>
+</div>
+<div class="offcanvas-backdrop fade show" onclick="document.getElementById('incident-panel').innerHTML = ''"></div>
+{{ end }}
+
+{{ define "fragment" }}
+		<div class="row g-3 mb-4">
+			<div class="col-12 col-sm-6">
+				<div class="text-muted small">{{ _ .Lang "Event ID" }}</div>
+				<div class="fw-semibold">{{ .Incident.EventID }}</div>
+			</div>
+			<div class="col-12 col-sm-6">
+				<div class="text-muted small">{{ _ .Lang "Location" }}</div>
+				<div class="fw-semibold">{{ .Incident.Location }}</div>
+			</div>
+			<div class="col-12">
+				<div class="text-muted small">{{ _ .Lang "Description" }}</div>
+				<div>{{ .Incident.Description }}</div>
+			</div>
+		</div>
+
+		<h3 class="h6">{{ _ .Lang "Patient" }}</h3>
+		<div class="card mb-4">
+			<div class="card-body">
+				<div class="row g-3">
+					<div class="col-12 col-sm-6">
+						<div class="text-muted small">{{ _ .Lang "Name" }}</div>
+						<div>{{ .Incident.Patient.Name }}</div>
+					</div>
+					<div class="col-6 col-sm-3">
+						<div class="text-muted small">{{ _ .Lang "Age" }}</div>
+						<div>{{ if .Incident.Patient.Age }}{{ .Incident.Patient.Age }}{{ else }}-{{ end }}</div>
+					</div>
+					<div class="col-6 col-sm-3">
+						<div class="text-muted small">{{ _ .Lang "Sex" }}</div>
+						<div>{{ _ .Lang .Incident.Patient.Sex }}</div>
+					</div>
+					<div class="col-12">
+						<div class="text-muted small">{{ _ .Lang "Notes" }}</div>
+						<div>{{ .Incident.Patient.Notes }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<h3 class="h6">{{ _ .Lang "Reports" }}</h3>
+		<div class="vstack gap-3">
+			{{ range .Incident.Reports }}
+			<div class="card">
+				<div class="card-header bg-white d-flex justify-content-between gap-2">
+					<span class="fw-semibold">{{ _ $.Lang .Type }}</span>
+					<span class="text-muted small">{{ formatTime .PerformedAt }}</span>
+				</div>
+				<div class="card-body">
+					{{ if .Symptoms }}
+					<div class="col-12">
+							<div class="text-muted small">{{ _ $.Lang "Symptoms" }}</div>
+							<div>{{ .Symptoms }}</div>
+					</div>
+					{{ end }}
+					{{ if .Allergies }}
+					<div class="col-12">
+							<div class="text-muted small">{{ _ $.Lang "Allergies" }}</div>
+							<div>{{ .Allergies }}</div>
+					</div>
+					{{ end }}
+					{{ if .Medications }}
+					<div class="col-12">
+							<div class="text-muted small">{{ _ $.Lang "Medications" }}</div>
+							<div>{{ .Medications }}</div>
+					</div>
+					{{ end }}
+					{{ if .PastMedical }}
+					<div class="col-12">
+							<div class="text-muted small">{{ _ $.Lang "PastMedical" }}</div>
+							<div>{{ .PastMedical }}</div>
+					</div>
+					{{ end }}
+					{{ if .LastIntake }}
+					<div class="col-12">
+							<div class="text-muted small">{{ _ $.Lang "LastIntake" }}</div>
+							<div>{{ .LastIntake }}</div>
+					</div>
+					{{ end }}
+					{{ if .Events }}
+					<div class="col-12">
+							<div class="text-muted small">{{ _ $.Lang "Events" }}</div>
+							<div>{{ .Events }}</div>
+					</div>
+					{{ end }}
+					{{ if .Notes }}
+					<div class="col-12">
+							<div class="text-muted small">{{ _ $.Lang "Notes" }}</div>
+							<div>{{ .Notes }}</div>
+					</div>
+					{{ end }}
+					{{ if .Interventions }}
+					<div class="col-12">
+							<div class="text-muted small">{{ _ $.Lang "Interventions" }}</div>
+							<div>{{ .Interventions }}</div>
+					</div>
+					{{ end }}
+					{{ if .Handoff }}
+					<div class="col-12">
+							<div class="text-muted small">{{ _ $.Lang "Handoff" }}</div>
+							<div>{{ .Handoff }}</div>
+					</div>
+					{{ end }}
+					{{ if .VitalMeasurements }}
+					<div class="table-responsive">
+						<table class="table table-sm mb-0">
+							<thead>
+								<tr>
+									<th>{{ _ $.Lang "Measured" }}</th>
+									<th>{{ _ $.Lang "HR" }}</th>
+									<th>{{ _ $.Lang "SpO2" }}</th>
+									<th>{{ _ $.Lang "BP" }}</th>
+									<th>{{ _ $.Lang "GCS" }}</th>
+									<th>{{ _ $.Lang "AVPU" }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{ range .VitalMeasurements }}
+								<tr>
+									<td>{{ formatTime .MeasuredAt }}</td>
+									<td>{{ if .HR }}{{ .HR }}{{ else }}-{{ end }}</td>
+									<td>{{ if .SpO2 }}{{ .SpO2 }}{{ else }}-{{ end }}</td>
+									<td>{{ if .BPSys }}{{ .BPSys }}{{ else }}-{{ end }}/{{ if .BPDia }}{{ .BPDia }}{{
+										else }}-{{ end }}</td>
+									<td>{{ if .GCS }}{{ .GCS }}{{ else }}-{{ end }}</td>
+									<td>{{ _ $.Lang .AVPU }}</td>
+								</tr>
+								{{ end }}
+							</tbody>
+						</table>
+					</div>
+					{{ end }}
+				</div>
+			</div>
+			{{ else }}
+			<div class="alert alert-light border">{{ _ .Lang "No reports recorded." }}</div>
+			{{ end }}
+		</div>
+{{ end }}

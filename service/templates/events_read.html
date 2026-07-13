@@ -1,0 +1,55 @@
+{{ define "view.standard" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "content" }}
+{{ template "fragment" . }}
+{{ end }}
+
+{{ define "view.xhr" }}
+<div class="offcanvas offcanvas-end event-offcanvas show" tabindex="-1" style="visibility: visible;"
+	aria-labelledby="event-detail-title">
+	<div class="offcanvas-header border-bottom">
+		<div>
+			<h2 class="offcanvas-title h5" id="event-detail-title">{{ .Event.Name }} </h2>
+			<div class="text-muted small">{{ .Event.Location }} · {{ formatTime .Event.StartTime }}</div>
+		</div>
+		<button type="button" class="btn-close" aria-label="{{ _ .Lang "Close" }}" onclick="document.getElementById('event-panel').innerHTML = ''"></button>
+	</div>
+	<div class="offcanvas-body">
+		{{ template "fragment" . }}
+	</div>
+</div>
+<div class="offcanvas-backdrop fade show" onclick="document.getElementById('event-panel').innerHTML = ''"></div>
+{{ end }}
+
+{{ define "fragment" }}
+		<div class="row g-3 mb-4">
+			<div class="col-12 col-sm-6">
+				<div class="text-muted small">{{ _ .Lang "Name" }}</div>
+				<div class="fw-semibold">{{ .Event.Name }}</div>
+			</div>
+			<div class="col-12 col-sm-6">
+				<div class="text-muted small">{{ _ .Lang "Location" }}</div>
+				<div class="fw-semibold">{{ .Event.Location }}</div>
+			</div>
+			<div class="col-12 col-sm-6">
+				<div class="text-muted small">{{ _ .Lang "Starts" }}</div>
+				<div>{{ formatTime .Event.StartTime }}</div>
+			</div>
+			<div class="col-12 col-sm-6">
+				<div class="text-muted small">{{ _ .Lang "Ends" }}</div>
+				<div>{{ formatTime .Event.EndTime }}</div>
+			</div>
+			<div class="col-12">
+				<div class="text-muted small">{{ _ .Lang "Description" }}</div>
+				<div>
+					{{ if .Event.Description }}
+					{{ .Event.Description }}
+					{{ else }}
+					<span class="text-muted">{{ _ .Lang "No description" }}</span>
+					{{ end }}
+				</div>
+			</div>
+		</div>
+{{ end }}

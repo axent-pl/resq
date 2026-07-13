@@ -1,0 +1,125 @@
+{{ define "view.standard" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "view.xhr" }}
+{{ template "fragment" . }}
+{{ end }}
+
+{{ define "content" }}
+<div class="d-flex align-items-center justify-content-between mb-4">
+	<div>
+		<h1 class="h3 mb-1">{{ _ .Lang "Events" }}</h1>
+		<p class="text-muted mb-0">{{ _ .Lang "Browse and filter rescue events." }}</p>
+	</div>
+	<a class="btn btn-primary" href="/event/new" hx-get="/event/new" hx-target="#event-panel"
+		hx-swap="innerHTML">{{ _ .Lang "New event" }}</a>
+</div>
+{{ template "fragment" . }}
+<div id="event-panel"></div>
+{{ end }}
+
+{{ define "fragment" }}
+<section id="event-list">
+	<form class="card border-0 shadow-sm mb-3" method="get" action="/events" hx-get="/events"
+		hx-target="#event-list" hx-push-url="true" hx-trigger="event-created from:body">
+		<div class="card-body">
+			<div class="row g-3 align-items-end">
+				<div class="col-12 col-md-6 col-xl-4">
+					<label class="form-label" for="event-search">{{ _ .Lang "Search" }}</label>
+					<input class="form-control" id="event-search" type="search" name="search"
+						value="{{ coalesce .Filter.Search }}">
+				</div>
+				<div class="col-6 col-md-3 col-xl-2">
+					<label class="form-label" for="event-started-from">{{ _ .Lang "Started from" }}</label>
+					<input class="form-control" id="event-started-from" type="date" name="started_from"
+						value="{{ formatTime .Filter.StartedFrom " 2006-01-02" }}">
+				</div>
+				<div class="col-6 col-md-3 col-xl-2">
+					<label class="form-label" for="event-started-to">{{ _ .Lang "Started to" }}</label>
+					<input class="form-control" id="event-started-to" type="date" name="started_to"
+						value="{{ formatTime .Filter.StartedTo " 2006-01-02" }}">
+				</div>
+				<div class="col-6 col-md-3 col-xl-1">
+					<label class="form-label" for="event-size">{{ _ .Lang "Size" }}</label>
+					<input class="form-control" id="event-size" type="number" min="1" max="100" name="size"
+						value="{{ .Paging.Size }}">
+				</div>
+				<div class="col-12 d-flex justify-content-end">
+					<input type="hidden" name="sort_by" value="{{ .Paging.SortBy }}">
+					<input type="hidden" name="order" value="{{ .Paging.Order }}">
+					<input type="hidden" name="page" value="1">
+					<button class="btn btn-primary" type="submit">{{ _ .Lang "Filter" }}</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	{{ if .Events }}
+	<div class="row g-3">
+		{{ range .Events }}
+		<div class="col-12 col-md-6 col-lg-3">
+			<article class="card border-0 shadow-sm h-100">
+				<div class="card-body">
+					<div class="d-flex flex-column flex-lg-row gap-3 justify-content-between">
+						<div>
+							<h2 class="h5 mb-1">
+								<a href="/events/{{ .ID }}" class="link-primary text-decoration-none"
+									hx-get="/events/{{ .ID }}" hx-target="#event-panel" hx-swap="innerHTML">{{ .Name }}</a>
+							</h2>
+							<div class="text-muted small">{{ _ $.Lang "Location" }}: {{ .Location }}</div>
+						</div>
+						<div class="text-lg-end text-muted small">
+							<div>{{ _ $.Lang "Starts" }}: <span class="text-body">{{ formatTime .StartTime }}</span></div>
+							<div>{{ _ $.Lang "Ends" }}: <span class="text-body">{{ formatTime .EndTime }}</span></div>
+						</div>
+					</div>
+					<div class="border-top pt-3 mt-3">
+						<div class="text-muted small mb-1">{{ _ $.Lang "Description" }}</div>
+						{{ if .Description }}
+						<div>{{ .Description }}</div>
+						{{ else }}
+						<div class="text-muted">{{ _ $.Lang "No description" }}</div>
+						{{ end }}
+					</div>
+				</div>
+			</article>
+		</div>
+		{{ end }}
+	</div>
+	{{ else }}
+	<div class="alert alert-light border text-center">{{ _ .Lang "No events found." }}</div>
+	{{ end }}
+
+	<div class="card border-0 shadow-sm mt-3">
+		<div class="card-body">
+			<div class="d-flex flex-column flex-sm-row gap-2 align-items-sm-center justify-content-between">
+				<div class="text-muted small">{{ _ .Lang "Page %d of %d - %d total" .Paging.Number .Paging.TotalPages .Paging.TotalItems }}</div>
+				<nav aria-label="{{ _ .Lang "Event pagination" }}">
+					<ul class="pagination pagination-sm mb-0">
+						<li class="page-item{{ if le .Paging.Number 1 }} disabled{{ end }}">
+							{{ if gt .Paging.Number 1 }}
+							<a class="page-link" hx-get="/events?{{ .PrevPageQuery }}" hx-target="#event-list"
+								hx-push-url="true" href="/events?{{ .PrevPageQuery }}">{{ _ .Lang "Previous" }}</a>
+							{{ else }}
+							<span class="page-link">{{ _ .Lang "Previous" }}</span>
+							{{ end }}
+						</li>
+						<li class="page-item disabled">
+							<span class="page-link">{{ .Paging.Number }}</span>
+						</li>
+						<li class="page-item{{ if ge .Paging.Number .Paging.TotalPages }} disabled{{ end }}">
+							{{ if lt .Paging.Number .Paging.TotalPages }}
+							<a class="page-link" hx-get="/events?{{ .NextPageQuery }}" hx-target="#event-list"
+								hx-push-url="true" href="/events?{{ .NextPageQuery }}">{{ _ .Lang "Next" }}</a>
+							{{ else }}
+							<span class="page-link">{{ _ .Lang "Next" }}</span>
+							{{ end }}
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</section>
+{{ end }}

@@ -1,0 +1,147 @@
+{{ define "view.standard" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "view.xhr" }}
+{{ template "fragment" . }}
+{{ end }}
+
+{{ define "content" }}
+<div class="d-flex align-items-center justify-content-between mb-4">
+	<div>
+		<h1 class="h3 mb-1">{{ _ .Lang "Incidents" }}</h1>
+		<p class="text-muted mb-0">{{ _ .Lang "Browse and filter event incidents." }}</p>
+	</div>
+	<a class="btn btn-primary" href="/incidents/new" hx-get="/incidents/new" hx-target="#incident-panel"
+		hx-swap="innerHTML">{{ _ .Lang "New incident" }}</a>
+</div>
+{{ template "fragment" . }}
+<div id="incident-panel"></div>
+{{ end }}
+
+{{ define "fragment" }}
+<section id="incident-list">
+	<form class="card border-0 shadow-sm mb-3" method="get" action="/incidents" hx-get="/incidents"
+		hx-target="#incident-list" hx-push-url="true" hx-trigger="incident-created from:body">
+		<div class="card-body">
+			<div class="row g-3 align-items-end">
+				<div class="col-12 col-md-6 col-xl-3">
+					<label class="form-label" for="incident-search">{{ _ .Lang "Search" }}</label>
+					<input class="form-control" id="incident-search" type="search" name="search"
+						value="{{ coalesce .Filter.Search }}">
+				</div>
+				<div class="col-6 col-md-3 col-xl-2">
+					<label class="form-label" for="incident-event-id">{{ _ .Lang "Event ID" }}</label>
+					<input class="form-control" id="incident-event-id" type="number" min="1" name="event_id"
+						value="{{ .Filter.EventID }}">
+				</div>
+				<div class="col-6 col-md-3 col-xl-2">
+					<label class="form-label" for="incident-status">{{ _ .Lang "Status" }}</label>
+					<select class="form-select" id="incident-status" name="status">
+						{{ range .StatusOptions }}
+						<option value="{{ .Value }}" {{ if .Selected }} selected{{ end }}>{{ _ $.Lang .Label }}</option>
+						{{ end }}
+					</select>
+				</div>
+				<div class="col-6 col-md-3 col-xl-2">
+					<label class="form-label" for="incident-started-from">{{ _ .Lang "Started from" }}</label>
+					<input class="form-control" id="incident-started-from" type="date" name="started_from"
+						value="{{ formatTime .Filter.StartedFrom " 2006-01-02" }}">
+				</div>
+				<div class="col-6 col-md-3 col-xl-2">
+					<label class="form-label" for="incident-started-to">{{ _ .Lang "Started to" }}</label>
+					<input class="form-control" id="incident-started-to" type="date" name="started_to"
+						value="{{ formatTime .Filter.StartedTo " 2006-01-02" }}">
+				</div>
+				<div class="col-6 col-md-3 col-xl-1">
+					<label class="form-label" for="incident-size">{{ _ .Lang "Size" }}</label>
+					<input class="form-control" id="incident-size" type="number" min="1" max="100" name="size"
+						value="{{ .Paging.Size }}">
+				</div>
+				<div class="col-12 d-flex justify-content-end">
+					<input type="hidden" name="sort_by" value="{{ .Paging.SortBy }}">
+					<input type="hidden" name="order" value="{{ .Paging.Order }}">
+					<input type="hidden" name="page" value="1">
+					<button class="btn btn-primary" type="submit">{{ _ .Lang "Filter" }}</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	{{ if .Incidents }}
+	<div class="row g-3">
+		{{ range .Incidents }}
+		<div class="col-12 col-md-6 col-lg-3">
+			<article class="card border-0 shadow-sm h-100">
+				<div class="card-body">
+					<div class="d-flex flex-column flex-lg-row gap-3 justify-content-between">
+						<div>
+							<div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+								<h2 class="h5 mb-0">
+									<a href="/incident/{{ .ID }}" class="link-primary text-decoration-none"
+										hx-get="/incident/{{ .ID }}" hx-target="#incident-panel" hx-swap="innerHTML">{{ .Number
+										}}</a>
+								</h2>
+								<span class="badge text-bg-secondary">{{ _ $.Lang (statusText .Status) }}</span>
+							</div>
+							<div class="text-muted small">{{ _ $.Lang "Started" }}: {{ formatTime .OccuredAt }}</div>
+						</div>
+						<div class="text-lg-end text-muted small">
+							<div>{{ _ $.Lang "Reports" }}: <span class="text-body">{{ len .Reports }}</span></div>
+						</div>
+					</div>
+					<div class="row g-3 border-top pt-3 mt-3">
+						<div class="col-12 col-md-6">
+							<div class="text-muted small mb-1">{{ _ $.Lang "Location" }}</div>
+							<div>{{ .Location }}</div>
+						</div>
+						<div class="col-12 col-md-6">
+							<div class="text-muted small mb-1">{{ _ $.Lang "Patient" }}</div>
+							{{ if .Patient.Name }}
+							<div>{{ .Patient.Name }}</div>
+							{{ else }}
+							<div class="text-muted">{{ _ $.Lang "No patient data" }}</div>
+							{{ end }}
+						</div>
+					</div>
+				</div>
+			</article>
+		</div>
+		{{ end }}
+	</div>
+	{{ else }}
+	<div class="alert alert-light border text-center">{{ _ .Lang "No incidents found." }}</div>
+	{{ end }}
+
+	<div class="card border-0 shadow-sm mt-3">
+		<div class="card-body">
+			<div class="d-flex flex-column flex-sm-row gap-2 align-items-sm-center justify-content-between">
+				<div class="text-muted small">{{ _ .Lang "Page %d of %d - %d total" .Paging.Number .Paging.TotalPages .Paging.TotalItems }}</div>
+				<nav aria-label="{{ _ .Lang "Incident pagination" }}">
+					<ul class="pagination pagination-sm mb-0">
+						<li class="page-item{{ if le .Paging.Number 1 }} disabled{{ end }}">
+							{{ if gt .Paging.Number 1 }}
+							<a class="page-link" hx-get="/incidents?{{ .PrevPageQuery }}" hx-target="#incident-list"
+								hx-push-url="true" href="/incidents?{{ .PrevPageQuery }}">{{ _ .Lang "Previous" }}</a>
+							{{ else }}
+							<span class="page-link">{{ _ .Lang "Previous" }}</span>
+							{{ end }}
+						</li>
+						<li class="page-item disabled">
+							<span class="page-link">{{ .Paging.Number }}</span>
+						</li>
+						<li class="page-item{{ if ge .Paging.Number .Paging.TotalPages }} disabled{{ end }}">
+							{{ if lt .Paging.Number .Paging.TotalPages }}
+							<a class="page-link" hx-get="/incidents?{{ .NextPageQuery }}" hx-target="#incident-list"
+								hx-push-url="true" href="/incidents?{{ .NextPageQuery }}">{{ _ .Lang "Next" }}</a>
+							{{ else }}
+							<span class="page-link">{{ _ .Lang "Next" }}</span>
+							{{ end }}
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</section>
+{{ end }}

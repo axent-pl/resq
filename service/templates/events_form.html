@@ -1,0 +1,72 @@
+{{ define "view.standard" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "content" }}
+{{ template "fragment" . }}
+{{ end }}
+
+{{ define "view.xhr" }}
+<div class="offcanvas offcanvas-end incident-offcanvas show" tabindex="-1" style="visibility: visible;"
+	aria-labelledby="event-new-title">
+	<div class="offcanvas-header border-bottom">
+		<h2 class="offcanvas-title h5" id="event-new-title">{{ _ .Lang "New event" }}</h2>
+		<button type="button" class="btn-close" aria-label="{{ _ .Lang "Close" }}"
+			onclick="document.getElementById('event-panel').innerHTML = ''"></button>
+	</div>
+	<div class="offcanvas-body">
+		{{ template "fragment" . }}
+	</div>
+</div>
+<div class="offcanvas-backdrop fade show" onclick="document.getElementById('event-panel').innerHTML = ''"></div>
+{{ end }}
+
+{{ define "fragment" }}
+<form method="post" action="/events" hx-post="/events" hx-target="#event-panel" hx-swap="innerHTML">
+	{{ with .Errors }}
+	<div class="alert alert-danger">{{ _ $.Lang "Review the highlighted fields." }}</div>
+	{{ end }}
+
+	<h3 class="h6">{{ _ .Lang "Event" }}</h3>
+	<div class="row g-3 mb-4">
+		<div class="col-12">
+			<label class="form-label" for="new-event-name">{{ _ .Lang "Name" }}</label>
+			<input class="form-control {{ if fieldHasErrors .Errors "name" }}is-invalid{{ end }}"
+				id="new-event-name" name="name" value="{{ .Form.Name }}">
+			{{ range fieldErrors .Errors "name" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end }}
+		</div>
+		<div class="col-12 col-md-6">
+			<label class="form-label" for="new-event-start-time">{{ _ .Lang "Start time" }}</label>
+			<input class="form-control {{ if fieldHasErrors .Errors "start_time" }}is-invalid{{ end }}"
+				id="new-event-start-time" type="datetime-local" name="start_time"
+				value="{{ formatTime .Form.StartTime "2006-01-02T15:04" }}">
+			{{ range fieldErrors .Errors "start_time" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end }}
+		</div>
+		<div class="col-12 col-md-6">
+			<label class="form-label" for="new-event-end-time">{{ _ .Lang "End time" }}</label>
+			<input class="form-control {{ if fieldHasErrors .Errors "end_time" }}is-invalid{{ end }}"
+				id="new-event-end-time" type="datetime-local" name="end_time"
+				value="{{ formatTime .Form.EndTime "2006-01-02T15:04" }}">
+			{{ range fieldErrors .Errors "end_time" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end }}
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-event-location">{{ _ .Lang "Location" }}</label>
+			<input class="form-control {{ if fieldHasErrors .Errors "location" }}is-invalid{{ end }}"
+				id="new-event-location" name="location" value="{{ .Form.Location }}">
+			{{ range fieldErrors .Errors "location" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end }}
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-event-description">{{ _ .Lang "Description" }}</label>
+			<textarea class="form-control" id="new-event-description" name="description"
+				rows="4">{{ .Form.Description }}</textarea>
+		</div>
+	</div>
+
+	<div class="d-flex justify-content-end gap-2">
+		<a class="btn btn-outline-secondary" href="/events">{{ _ .Lang "Events" }}</a>
+		<button type="button" class="btn btn-outline-secondary"
+			onclick="document.getElementById('event-panel').innerHTML = ''">{{ _ .Lang "Cancel" }}</button>
+		<button type="submit" class="btn btn-primary">{{ _ .Lang "Create event" }}</button>
+	</div>
+</form>
+{{ end }}

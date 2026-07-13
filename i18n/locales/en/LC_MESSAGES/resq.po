@@ -1,0 +1,45 @@
+msgid ""
+msgstr ""
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "alert"
+msgstr "Alert"
+
+msgid "female"
+msgstr "Female"
+
+msgid "followup_assessment"
+msgstr "Follow-up assessment"
+
+msgid "handoff"
+msgstr "Handoff"
+
+msgid "initial_assessment"
+msgstr "Initial assessment"
+
+msgid "intervention"
+msgstr "Intervention"
+
+msgid "male"
+msgstr "Male"
+
+msgid "note"
+msgstr "Note"
+
+msgid "other"
+msgstr "Other"
+
+msgid "pain"
+msgstr "Pain"
+
+msgid "unknown"
+msgstr "Unknown"
+
+msgid "unresponsive"
+msgstr "Unresponsive"
+
+msgid "voice"
+msgstr "Voice"

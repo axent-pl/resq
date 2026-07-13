@@ -1,0 +1,196 @@
+{{ define "view.standard" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "content" }}
+{{ template "fragment" . }}
+{{ end }}
+
+{{ define "view.xhr" }}
+<div class="offcanvas offcanvas-end incident-offcanvas show" tabindex="-1" style="visibility: visible;"
+	aria-labelledby="incident-new-title">
+	<div class="offcanvas-header border-bottom">
+		<h2 class="offcanvas-title h5" id="incident-new-title">{{ _ .Lang "New incident" }}</h2>
+		<button type="button" class="btn-close" aria-label="{{ _ .Lang "Close" }}"
+			onclick="document.getElementById('incident-panel').innerHTML = ''"></button>
+	</div>
+	<div class="offcanvas-body">
+		{{ template "fragment" . }}
+	</div>
+</div>
+<div class="offcanvas-backdrop fade show" onclick="document.getElementById('incident-panel').innerHTML = ''"></div>
+{{ end }}
+
+
+{{ define "fragment" }}
+<form method="post" action="/incidents" hx-post="/incidents" hx-target="#incident-panel" hx-swap="innerHTML">
+	{{ with .Errors }}
+	<div class="alert alert-danger">{{ _ $.Lang "Review the highlighted fields." }}</div>
+	{{ end }}
+
+	<h3 class="h6">{{ _ .Lang "Incident" }}</h3>
+	<div class="row g-3 mb-4">
+		<div class="col-6 col-md-3">
+			<label class="form-label" for="new-event-id">{{ _ .Lang "Event ID" }}</label>
+			<select class="form-select" id="new-event-id" name="event_id">
+				{{ range .EventOptions }}
+				<option value="{{ .Value }}" {{ if .Selected }} selected{{ end }}>{{ .Label }}</option>
+				{{ end }}
+			</select>
+			{{ range fieldErrors .Errors "event_id" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end
+			}}
+		</div>
+		<div class="col-6 col-md-3">
+			<label class="form-label" for="new-number">{{ _ .Lang "Number" }}</label>
+			<input class="form-control" id="new-number" name="number" value="{{ .Form.Number }}">
+			{{ range fieldErrors .Errors "number" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end }}
+		</div>
+		<div class="col-12 col-md-6">
+			<label class="form-label" for="new-location">{{ _ .Lang "Location" }}</label>
+			<input class="form-control {{ if fieldHasErrors .Errors " location"}} is-invalid {{ end }}"
+				id="new-location" name="location" value="{{ .Form.Location }}">
+			{{ range fieldErrors .Errors "location" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end
+			}}
+		</div>
+		<div class="col-12 col-md-6">
+			<label class="form-label" for="new-occured-at">{{ _ .Lang "Occured at" }}</label>
+			<input class="form-control" id="new-occured-at" type="datetime-local" name="occured_at"
+				value="{{ formatTime .Form.OccuredAt }}">
+			{{ range fieldErrors .Errors "occured_at" }}<div class="invalid-feedback d-block">{{ . }}</div>{{
+			end }}
+		</div>
+		<div class="col-12 col-md-6">
+			<label class="form-label" for="new-status">{{ _ .Lang "Status" }}</label>
+			<select class="form-select" id="new-status" name="status">
+				{{ range .StatusOptions }}
+				<option value="{{ .Value }}" {{ if .Selected }} selected{{ end }}>{{ _ $.Lang .Label }}</option>
+				{{ end }}
+			</select>
+			{{ range fieldErrors .Errors "status" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end }}
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-description">{{ _ .Lang "Description" }}</label>
+			<textarea class="form-control" id="new-description" name="description"
+				rows="2">{{ .Form.Description }}</textarea>
+		</div>
+	</div>
+
+	<h3 class="h6">{{ _ .Lang "Patient" }}</h3>
+	<div class="row g-3 mb-4">
+		<div class="col-12 col-md-6">
+			<label class="form-label" for="new-patient-name">{{ _ .Lang "Name" }}</label>
+			<input class="form-control {{ if fieldHasErrors .Errors " patient.name"}} is-invalid {{ end }}"
+				id="new-patient-name" name="patient.name" value="{{ .Form.Patient.Name }}">
+			{{ range fieldErrors .Errors "patient.name" }}<div class="invalid-feedback d-block">{{ . }}</div>{{
+			end }}
+		</div>
+		<div class="col-6 col-md-3">
+			<label class="form-label" for="new-patient-age">{{ _ .Lang "Age" }}</label>
+			<input class="form-control" id="new-patient-age" type="number" name="patient.age"
+				value="{{ .Form.Patient.Age }}">
+		</div>
+		<div class="col-6 col-md-3">
+			<label class="form-label" for="new-patient-sex">{{ _ .Lang "Sex" }}</label>
+			<select class="form-select" id="new-patient-sex" name="patient.sex">
+				{{ range .SexOptions }}
+				<option value="{{ .Value }}" {{ if .Selected }} selected{{ end }}>{{ _ $.Lang .Label }}</option>
+				{{ end }}
+			</select>
+			{{ range fieldErrors .Errors "patient.sex" }}<div class="invalid-feedback d-block">{{ . }}</div>{{
+			end }}
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-patient-notes">{{ _ .Lang "Notes" }}</label>
+			<textarea class="form-control" id="new-patient-notes" name="patient.notes"
+				rows="2">{{ .Form.Patient.Notes }}</textarea>
+		</div>
+	</div>
+
+	<h3 class="h6">{{ _ .Lang "Initial report" }}</h3>
+	<div class="row g-3 mb-4">
+		<div class="col-12">
+			<label class="form-label" for="new-symptoms">{{ _ .Lang "Symptoms" }}</label>
+			<textarea class="form-control" id="new-symptoms" name="report.symptoms"
+				rows="2">{{ .Form.Report.Symptoms }}</textarea>
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-allergies">{{ _ .Lang "Allergies" }}</label>
+			<textarea class="form-control" id="new-allergies" name="report.allergies"
+				rows="2">{{ .Form.Report.Allergies }}</textarea>
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-medications">{{ _ .Lang "Medications" }}</label>
+			<textarea class="form-control" id="new-medications" name="report.medications"
+				rows="2">{{ .Form.Report.Medications }}</textarea>
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-past_medical">{{ _ .Lang "PastMedical" }}</label>
+			<textarea class="form-control" id="new-past_medical" name="report.past_medical"
+				rows="2">{{ .Form.Report.PastMedical }}</textarea>
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-last_intake">{{ _ .Lang "LastIntake" }}</label>
+			<textarea class="form-control" id="new-last_intake" name="report.last_intake"
+				rows="2">{{ .Form.Report.LastIntake }}</textarea>
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-events">{{ _ .Lang "Events" }}</label>
+			<textarea class="form-control" id="new-events" name="report.events"
+				rows="2">{{ .Form.Report.Events }}</textarea>
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-notes">{{ _ .Lang "Notes" }}</label>
+			<textarea class="form-control" id="new-notes" name="report.notes"
+				rows="2">{{ .Form.Report.Notes }}</textarea>
+		</div>
+	</div>
+
+	<h3 class="h6">{{ _ .Lang "First vital measurement" }}</h3>
+	<div class="row g-3 mb-4">
+		<div class="col-6 col-md-2">
+			<label class="form-label" for="new-hr">{{ _ .Lang "HR" }}</label>
+			<input class="form-control" id="new-hr" type="number" name="report.vital_measurements.hr"
+				value="{{ .Form.Report.VitalMeasurements.HR }}">
+		</div>
+		<div class="col-6 col-md-2">
+			<label class="form-label" for="new-spo2">{{ _ .Lang "SpO2" }}</label>
+			<input class="form-control" id="new-spo2" type="number" name="report.vital_measurements.spo2"
+				value="{{ .Form.Report.VitalMeasurements.SpO2 }}">
+		</div>
+		<div class="col-6 col-md-2">
+			<label class="form-label" for="new-bp_sys">{{ _ .Lang "BPSys" }}</label>
+			<input class="form-control" id="new-bp_sys" type="number" name="report.vital_measurements.bp_sys"
+				value="{{ .Form.Report.VitalMeasurements.BPSys }}">
+		</div>
+		<div class="col-6 col-md-2">
+			<label class="form-label" for="new-bp_dia">{{ _ .Lang "BPDia" }}</label>
+			<input class="form-control" id="new-bp_dia" type="number" name="report.vital_measurements.bp_dia"
+				value="{{ .Form.Report.VitalMeasurements.BPDia }}">
+		</div>
+		<div class="col-6 col-md-2">
+			<label class="form-label" for="new-glucose">{{ _ .Lang "Glucose" }}</label>
+			<input class="form-control" id="new-glucose" type="number" name="report.vital_measurements.glucose"
+				value="{{ .Form.Report.VitalMeasurements.Glucose }}">
+		</div>
+		<div class="col-6 col-md-2">
+			<label class="form-label" for="new-gcs">{{ _ .Lang "GCS" }}</label>
+			<input class="form-control" id="new-gcs" type="number" name="report.vital_measurements.gcs"
+				value="{{ .Form.Report.VitalMeasurements.GCS }}">
+		</div>
+		<div class="col-6 col-md-2">
+			<label class="form-label" for="new-avpu">{{ _ .Lang "AVPU" }}</label>
+			<select class="form-select" id="new-avpu" name="report.vital_measurements.avpu">
+				{{ range .AVPUOptions }}
+				<option value="{{ .Value }}" {{ if .Selected }} selected{{ end }}>{{ _ $.Lang .Label }}</option>
+				{{ end }}
+			</select>
+		</div>
+	</div>
+
+	<div class="d-flex justify-content-end gap-2">
+		<button type="button" class="btn btn-outline-secondary"
+			onclick="document.getElementById('incident-panel').innerHTML = ''">{{ _ .Lang "Cancel" }}</button>
+		<button type="submit" class="btn btn-primary">{{ _ .Lang "Create incident" }}</button>
+	</div>
+</form>
+{{ end }}

@@ -1,7 +1,0 @@
-{
-	email admin@axent.pl
-}
-
-{$RESQ_DOMAIN} {
-	reverse_proxy resq:1234
-}

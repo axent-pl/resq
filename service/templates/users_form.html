@@ -1,0 +1,67 @@
+{{ define "view.standard" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "content" }}
+{{ template "fragment" . }}
+{{ end }}
+
+{{ define "view.xhr" }}
+<div class="offcanvas offcanvas-end user-offcanvas show" tabindex="-1" style="visibility: visible;"
+	aria-labelledby="user-new-title">
+	<div class="offcanvas-header border-bottom">
+		<h2 class="offcanvas-title h5" id="user-new-title">{{ _ .Lang "New user" }}</h2>
+		<button type="button" class="btn-close" aria-label="{{ _ .Lang "Close" }}"
+			onclick="document.getElementById('user-panel').innerHTML = ''"></button>
+	</div>
+	<div class="offcanvas-body">
+		{{ template "fragment" . }}
+	</div>
+</div>
+<div class="offcanvas-backdrop fade show" onclick="document.getElementById('user-panel').innerHTML = ''"></div>
+{{ end }}
+
+{{ define "fragment" }}
+<form method="post" action="/users" hx-post="/users" hx-target="#user-panel" hx-swap="innerHTML">
+	{{ with .Errors }}
+	<div class="alert alert-danger">{{ _ $.Lang "Review the highlighted fields." }}</div>
+	{{ end }}
+
+	<h3 class="h6">{{ _ .Lang "Users" }}</h3>
+	<div class="row g-3 mb-4">
+		<div class="col-12">
+			<label class="form-label" for="new-user-username">{{ _ .Lang "Username" }}</label>
+			<input class="form-control {{ if fieldHasErrors .Errors "username" }}is-invalid{{ end }}"
+				id="new-user-username" name="username" value="{{ .Form.Username }}">
+			{{ range fieldErrors .Errors "username" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end }}
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-user-display-name">{{ _ .Lang "Display name" }}</label>
+			<input class="form-control {{ if fieldHasErrors .Errors "display_name" }}is-invalid{{ end }}"
+				id="new-user-display-name" name="display_name" value="{{ .Form.DisplayName }}">
+			{{ range fieldErrors .Errors "display_name" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end }}
+		</div>
+		<div class="col-12">
+			<label class="form-label" for="new-user-email">{{ _ .Lang "Email" }}</label>
+			<input class="form-control {{ if fieldHasErrors .Errors "email" }}is-invalid{{ end }}"
+				id="new-user-email" type="email" name="email" value="{{ .Form.Email }}">
+			{{ range fieldErrors .Errors "email" }}<div class="invalid-feedback d-block">{{ . }}</div>{{ end }}
+		</div>
+		<div class="col-12 col-md-6">
+			<label class="form-label" for="new-user-phone">{{ _ .Lang "Phone" }}</label>
+			<input class="form-control" id="new-user-phone" type="tel" name="phone" value="{{ .Form.Phone }}">
+		</div>
+		<div class="col-12 col-md-6">
+			<label class="form-label" for="new-user-role">{{ _ .Lang "Role" }}</label>
+			<input class="form-control" id="new-user-role" name="role" value="{{ .Form.Role }}">
+		</div>
+	</div>
+
+	<div class="d-flex justify-content-end gap-2">
+		<a class="btn btn-outline-secondary" href="/users">{{ _ .Lang "Users" }}</a>
+		<button type="button" class="btn btn-outline-secondary"
+			onclick="document.getElementById('user-panel').innerHTML = ''">{{ _ .Lang "Cancel" }}</button>
+		<button type="submit" class="btn btn-primary">{{ _ .Lang "Create user" }}</button>
+	</div>
+</form>
+{{ end }}

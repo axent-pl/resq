@@ -1,0 +1,49 @@
+{{ define "layout" }}
+<!doctype html>
+<html lang="{{ .Lang }}">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{ _ .Lang .Title }}</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+	<style>
+		body {
+			background: #f8f9fa;
+		}
+		.incident-offcanvas {
+			width: min(100vw, 760px) !important;
+		}
+	</style>
+	<meta name="htmx-config" content='{
+	"responseHandling": [
+		{"code":"204", "swap": false},
+		{"code":"[23]..", "swap": true},
+		{"code":"422", "swap": true, "error": false},
+		{"code":"[45]..", "swap": false, "error": true}
+	]
+	}'>
+</head>
+<body>
+	<nav class="navbar navbar-light navbar-expand-lg bg-white border-bottom">
+		<div class="container-fluid px-4">
+			<a class="navbar-brand fw-semibold" href="/incidents">ResQ</a>
+			<div class="dropdown ms-auto">
+				<button class="navbar-toggler d-block" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ _ .Lang "Toggle navigation" }}">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end">
+					<li><a class="dropdown-item" href="/events">{{ _ .Lang "Events" }}</a></li>
+					<li><a class="dropdown-item" href="/incidents">{{ _ .Lang "Incidents" }}</a></li>
+					<li><a class="dropdown-item" href="/users">{{ _ .Lang "Users" }}</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<main class="container-fluid px-4 py-4">
+		{{ template "content" . }}
+	</main>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+</html>
+{{ end }}

@@ -1,0 +1,141 @@
+{{ define "view.standard" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "view.xhr" }}
+{{ template "fragment" . }}
+{{ end }}
+
+{{ define "content" }}
+<div class="d-flex align-items-center justify-content-between mb-4">
+	<div>
+		<h1 class="h3 mb-1">{{ _ .Lang "Users" }}</h1>
+		<p class="text-muted mb-0">{{ _ .Lang "Browse and filter users." }}</p>
+	</div>
+	<a class="btn btn-primary" href="/user/new" hx-get="/user/new" hx-target="#user-panel"
+		hx-swap="innerHTML">{{ _ .Lang "New user" }}</a>
+</div>
+{{ template "fragment" . }}
+<div id="user-panel"></div>
+{{ end }}
+
+{{ define "fragment" }}
+<section id="user-list">
+	<form class="card border-0 shadow-sm mb-3" method="get" action="/users" hx-get="/users"
+		hx-target="#user-list" hx-push-url="true" hx-trigger="user-created from:body">
+		<div class="card-body">
+			<div class="row g-3 align-items-end">
+				<div class="col-12 col-md-6 col-xl-4">
+					<label class="form-label" for="user-search">{{ _ .Lang "Search" }}</label>
+					<input class="form-control" id="user-search" type="search" name="search"
+						value="{{ coalesce .Filter.Search }}">
+				</div>
+				<div class="col-12 col-md-4 col-xl-3">
+					<label class="form-label" for="user-role">{{ _ .Lang "Role" }}</label>
+					<input class="form-control" id="user-role" type="text" name="role"
+						value="{{ coalesce .Filter.Role }}">
+				</div>
+				<div class="col-6 col-md-3 col-xl-1">
+					<label class="form-label" for="user-size">{{ _ .Lang "Size" }}</label>
+					<input class="form-control" id="user-size" type="number" min="1" max="100" name="size"
+						value="{{ .Paging.Size }}">
+				</div>
+				<div class="col-12 d-flex justify-content-end">
+					<input type="hidden" name="sort_by" value="{{ .Paging.SortBy }}">
+					<input type="hidden" name="order" value="{{ .Paging.Order }}">
+					<input type="hidden" name="page" value="1">
+					<button class="btn btn-primary" type="submit">{{ _ .Lang "Filter" }}</button>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	{{ if .Users }}
+	<div class="row g-3">
+		{{ range .Users }}
+		<div class="col-12 col-md-6 col-lg-3">
+			<article class="card border-0 shadow-sm h-100">
+				<div class="card-body">
+					<div class="d-flex flex-column flex-lg-row gap-3 justify-content-between">
+						<div>
+							<div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+								<h2 class="h5 mb-0">
+									<a href="/users/{{ .ID }}" class="link-primary text-decoration-none"
+										hx-get="/users/{{ .ID }}" hx-target="#user-panel" hx-swap="innerHTML">{{ .Username }}</a>
+								</h2>
+								{{ if .Role }}
+								<span class="badge text-bg-secondary">{{ .Role }}</span>
+								{{ end }}
+							</div>
+							{{ if .DisplayName }}
+							<div class="text-muted small">{{ .DisplayName }}</div>
+							{{ else }}
+							<div class="text-muted small">{{ _ $.Lang "No display name" }}</div>
+							{{ end }}
+						</div>
+					</div>
+					<div class="row g-3 border-top pt-3 mt-3">
+						<div class="col-12 col-md-6">
+							<div class="text-muted small mb-1">{{ _ $.Lang "Email" }}</div>
+							{{ if .Email }}
+							<a href="mailto:{{ .Email }}" class="link-secondary text-decoration-none">{{ .Email }}</a>
+							{{ else }}
+							<div class="text-muted">{{ _ $.Lang "No email" }}</div>
+							{{ end }}
+						</div>
+						<div class="col-12 col-md-6">
+							<div class="text-muted small mb-1">{{ _ $.Lang "Phone" }}</div>
+							{{ if .Phone }}
+							<a href="tel:{{ .Phone }}" class="link-secondary text-decoration-none">{{ .Phone }}</a>
+							{{ else }}
+							<div class="text-muted">{{ _ $.Lang "No phone" }}</div>
+							{{ end }}
+						</div>
+						{{ if not .Role }}
+						<div class="col-12">
+							<div class="text-muted small mb-1">{{ _ $.Lang "Role" }}</div>
+							<div class="text-muted">{{ _ $.Lang "No role" }}</div>
+						</div>
+						{{ end }}
+					</div>
+				</div>
+			</article>
+		</div>
+		{{ end }}
+	</div>
+	{{ else }}
+	<div class="alert alert-light border text-center">{{ _ .Lang "No users found." }}</div>
+	{{ end }}
+
+	<div class="card border-0 shadow-sm mt-3">
+		<div class="card-body">
+			<div class="d-flex flex-column flex-sm-row gap-2 align-items-sm-center justify-content-between">
+				<div class="text-muted small">{{ _ .Lang "Page %d of %d - %d total" .Paging.Number .Paging.TotalPages .Paging.TotalItems }}</div>
+				<nav aria-label="{{ _ .Lang "User pagination" }}">
+					<ul class="pagination pagination-sm mb-0">
+						<li class="page-item{{ if le .Paging.Number 1 }} disabled{{ end }}">
+							{{ if gt .Paging.Number 1 }}
+							<a class="page-link" hx-get="/users?{{ .PrevPageQuery }}" hx-target="#user-list"
+								hx-push-url="true" href="/users?{{ .PrevPageQuery }}">{{ _ .Lang "Previous" }}</a>
+							{{ else }}
+							<span class="page-link">{{ _ .Lang "Previous" }}</span>
+							{{ end }}
+						</li>
+						<li class="page-item disabled">
+							<span class="page-link">{{ .Paging.Number }}</span>
+						</li>
+						<li class="page-item{{ if ge .Paging.Number .Paging.TotalPages }} disabled{{ end }}">
+							{{ if lt .Paging.Number .Paging.TotalPages }}
+							<a class="page-link" hx-get="/users?{{ .NextPageQuery }}" hx-target="#user-list"
+								hx-push-url="true" href="/users?{{ .NextPageQuery }}">{{ _ .Lang "Next" }}</a>
+							{{ else }}
+							<span class="page-link">{{ _ .Lang "Next" }}</span>
+							{{ end }}
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+</section>
+{{ end }}
