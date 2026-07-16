@@ -11,6 +11,16 @@ import (
 	"time"
 )
 
+func UnmarshalAndValidateDTO[T any](r *http.Request) (T, error) {
+	var d T
+	d, err := UnmarshalDTO[T](r)
+	if err != nil {
+		return d, err
+	}
+	err = ValidateDTO(d)
+	return d, err
+}
+
 func UnmarshalDTO[T any](r *http.Request) (T, error) {
 	var d T
 	if r == nil {

@@ -134,20 +134,9 @@ func IncidentFormHandler(eventService *service.EventService, incidentService *se
 
 func IncidentCreateHandler(eventService *service.EventService, incidentService *service.IncidentService, templateService *service.TemplateService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		createRequestDTO, err := dto.UnmarshalDTO[dto.IncidentCreateRequestDTO](r)
+		createRequestDTO, err := dto.UnmarshalAndValidateDTO[dto.IncidentCreateRequestDTO](r)
 		if err != nil {
 			slog.Warn("incident create unmarshal error", "unmarshal_errors", err)
-			var validationErr dto.ValidationError
-			if errors.As(err, &validationErr) {
-				renderIncidentCreateFormErrors(w, r, eventService, incidentService, templateService, createRequestDTO, validationErr.Errors)
-				return
-			}
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		if err := dto.ValidateDTO(createRequestDTO); err != nil {
-			slog.Warn("incident create validation error", "validation_errors", err)
 			var validationErr dto.ValidationError
 			if errors.As(err, &validationErr) {
 				renderIncidentCreateFormErrors(w, r, eventService, incidentService, templateService, createRequestDTO, validationErr.Errors)

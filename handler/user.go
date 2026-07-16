@@ -111,20 +111,9 @@ func UserFormHandler(userService *service.UserService, templateService *service.
 
 func UserCreateHandler(userService *service.UserService, templateService *service.TemplateService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		createRequestDTO, err := dto.UnmarshalDTO[dto.UserCreateRequestDTO](r)
+		createRequestDTO, err := dto.UnmarshalAndValidateDTO[dto.UserCreateRequestDTO](r)
 		if err != nil {
 			slog.Warn("user create unmarshal error", "unmarshal_errors", err)
-			var validationErr dto.ValidationError
-			if errors.As(err, &validationErr) {
-				renderUserCreateFormErrors(w, r, templateService, createRequestDTO, validationErr.Errors)
-				return
-			}
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		if err := dto.ValidateDTO(createRequestDTO); err != nil {
-			slog.Warn("user create validation error", "validation_errors", err)
 			var validationErr dto.ValidationError
 			if errors.As(err, &validationErr) {
 				renderUserCreateFormErrors(w, r, templateService, createRequestDTO, validationErr.Errors)

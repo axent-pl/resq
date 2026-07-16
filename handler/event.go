@@ -111,31 +111,9 @@ func EventFormHandler(eventService *service.EventService, templateService *servi
 
 func EventCreateHandler(eventService *service.EventService, templateService *service.TemplateService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		createRequestDTO, err := dto.UnmarshalDTO[dto.EventCreateRequestDTO](r)
+		createRequestDTO, err := dto.UnmarshalAndValidateDTO[dto.EventCreateRequestDTO](r)
 		if err != nil {
 			slog.Warn("event create unmarshal error", "unmarshal_errors", err)
-			var validationErr dto.ValidationError
-			if errors.As(err, &validationErr) {
-				w.Header().Set("Content-Type", "text/html; charset=utf-8")
-				w.WriteHeader(http.StatusUnprocessableEntity)
-				data := dto.EventFormTemplateDTO{
-					BaseTemplateDTO: &dto.BaseTemplateDTO{
-						Title: "New event",
-					},
-					Form:   createRequestDTO,
-					Errors: validationErr.Errors,
-				}
-				if renderErr := templateService.Render(r, w, "events_form", service.TemplateVariantXHR, data); renderErr != nil {
-					http.Error(w, renderErr.Error(), http.StatusInternalServerError)
-				}
-				return
-			}
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		if err := dto.ValidateDTO(createRequestDTO); err != nil {
-			slog.Warn("event create validation error", "validation_errors", err)
 			var validationErr dto.ValidationError
 			if errors.As(err, &validationErr) {
 				w.Header().Set("Content-Type", "text/html; charset=utf-8")
